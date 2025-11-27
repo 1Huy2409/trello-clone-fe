@@ -1,14 +1,26 @@
-import { SidebarProvider, SidebarTrigger } from "@/shared/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "@/shared/components/ui/sidebar";
 import { AppSidebar } from "./SideBar";
+import Header from "./Header";
+import { Suspense } from "react";
+import { Outlet, useLocation } from "react-router";
 
 export function AppLayout() {
-
+    const location = useLocation();
     return (
         <SidebarProvider>
-            <AppSidebar />
-            <main>
-                <SidebarTrigger />
-            </main>
+            <div className="flex h-screen bg-gray-50 w-full">
+                <AppSidebar />
+                <SidebarInset>
+                    <Header />
+                    <div className="flex-1 flex flex-col overflow-hidden">
+                        <main className="flex-1 overflow-hidden">
+                            <Suspense key={location.key} fallback={<div>Loading...</div>}>
+                                <Outlet />
+                            </Suspense>
+                        </main>
+                    </div>  
+                </SidebarInset>
+            </div>
         </SidebarProvider>
     )
 }

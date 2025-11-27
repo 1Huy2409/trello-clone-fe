@@ -27,7 +27,7 @@ export function AppSidebar() {
   } : {
     name: 'Guest',
     email: 'nhathuy2409@gmail.com',
-    avatar: 'https://avatars.githubusercontent.com/u/50208514?v=4'
+    avatar: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fdienmaycholon.com%2Fkinh-nghiem-mua-sam%2Favatar-cute&psig=AOvVaw1G9v8zFL9xfy9V33sTLBxe&ust=1764321428093000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOiBodf_kZEDFQAAAAAdAAAAABAE'
   }
   return (
     <Sidebar>
