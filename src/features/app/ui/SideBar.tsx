@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
-export function AppSidebar() {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const navMain = [
     {
       title: 'Dashboard',
@@ -30,14 +30,14 @@ export function AppSidebar() {
     avatar: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fdienmaycholon.com%2Fkinh-nghiem-mua-sam%2Favatar-cute&psig=AOvVaw1G9v8zFL9xfy9V33sTLBxe&ust=1764321428093000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOiBodf_kZEDFQAAAAAdAAAAABAE'
   }
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-4 py-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Kanban className="w-5 h-5 text-white" />
-            </div>
-            <h1 className="text-xl font-bold text-gray-900">Trello</h1>
+        <div className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
+          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
+            <Kanban className="w-5 h-5 text-white" />
           </div>
+          <h1 className="text-xl font-bold text-gray-900 group-data-[collapsible=icon]:hidden">Trello</h1>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
