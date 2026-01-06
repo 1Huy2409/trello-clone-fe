@@ -29,15 +29,15 @@ function reducer(state: {
     }
 }
 
-export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
-    const [state, dispatch] = useReducer(reducer, {
-        searchQuery: '',
-        sortBy: 'name',
-        viewMode: 'grid',
-        boards: []
-    })
+// export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
+//     const [state, dispatch] = useReducer(reducer, {
+//         searchQuery: '',
+//         sortBy: 'name',
+//         viewMode: 'grid',
+//         boards: []
+//     })
 
-    return (
-        <WorkspaceContext></WorkspaceContext>
-    )
-}
+//     return (
+//         <WorkspaceContext></WorkspaceContext>
+//     )
+// }

@@ -6,7 +6,7 @@ import { Label } from "@/shared/components/ui/label"
 import avagit from "/avagit.jpg"
 import { useState } from "react"
 import { api } from "@/shared/api/api.shared"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { useAuthStore } from "@/shared/stores/authStore"
 
 export function LoginForm({
@@ -36,9 +36,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form 
-          // onSubmit={handleLogin} 
-          className="p-6 md:p-8">
+          <form
+            // onSubmit={handleLogin} 
+            className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -67,9 +67,9 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" 
-                // value={password} onChange={(e) => setPassword(e.target.value)} 
-                required />
+                <Input id="password" type="password"
+                  // value={password} onChange={(e) => setPassword(e.target.value)} 
+                  required />
               </div>
               <Button type="submit" className="w-full">
                 Login
@@ -101,9 +101,9 @@ export function LoginForm({
               </div>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
+                <Link to="/auth/register" className="underline underline-offset-4">
                   Sign up
-                </a>
+                </Link>
               </div>
             </div>
           </form>
