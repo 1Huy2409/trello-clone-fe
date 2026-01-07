@@ -1,71 +1,55 @@
+
 export interface User {
     id: string;
-    fullname: string;
-    username: string;
     email: string;
-    googleId: string;
+    fullname: string;
     avatarUrl: string;
     description: string;
     isActive: boolean;
 }
 
-export interface Tag {
-    id: string;
-    name: string;
-    color: string;
-    boardId: string;
-}
+// --- Status & Enums ---
+export const WorkspaceStatus = {
+    ACTIVE: 'active',
+    ARCHIVED: 'archived',
+} as const;
+export type WorkspaceStatus = (typeof WorkspaceStatus)[keyof typeof WorkspaceStatus];
 
-export interface Todo {
-    id: string;
-    text: string;
-    completed: boolean;
-    cardId: string;
-    createdAt: Date;
-}
+export const BoardVisibility = {
+    PRIVATE: 'private',
+    WORKSPACE: 'workspace',
+    PUBLIC: 'public'
+} as const;
+export type BoardVisibility = (typeof BoardVisibility)[keyof typeof BoardVisibility];
+
+export const BoardStatus = {
+    ACTIVE: 'active',
+    ARCHIVED: 'archived'
+} as const;
+export type BoardStatus = (typeof BoardStatus)[keyof typeof BoardStatus];
+
+
+// --- Interfaces ---
 
 export interface Workspace {
     id: string;
-    name: string;
+    title: string;
     description: string;
-    createdAt: Date;
-    members: string[];
-    boardIds: string[];
+    visibility: boolean;
+    status: WorkspaceStatus;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Board {
     id: string;
     title: string;
     description: string;
+    coverUrl: string;
+    visibility: BoardVisibility;
+    ownerId: string;
+    status: BoardStatus;
     workspaceId: string;
-    createdAt: Date;
-    members: string[];
-    listIds: string[];
+    createdAt: string;
+    updatedAt: string;
 }
-
-// export interface List {
-//     id: string;
-//     title: string;
-//     boardId: string;
-//     order: number;
-//     cardIds: string[];
-// }
-
-// export interface Card {
-//     id: string;
-//     title: string;
-//     description: string;
-//     listId: string;
-//     order: number;
-//     createdAt: Date;
-//     assignedUsers: string[];
-//     tagIds: string[];
-// }
-
-// export interface Comment {
-//     id: string;
-//     cardId: string;
-//     userId: string;
-//     content: string;
-//     createdAt: Date;
-// }

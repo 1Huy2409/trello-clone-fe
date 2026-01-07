@@ -1,20 +1,11 @@
-export const WorkspaceStatus = {
-    ACTIVE: 'active',
-    ARCHIVED: 'archived',
-} as const;
 
-export type WorkspaceStatus = (typeof WorkspaceStatus)[keyof typeof WorkspaceStatus];
+import { WorkspaceStatus } from "@/shared/lib/types";
+import type { Workspace } from "@/shared/lib/types";
 
 // workspace
-export interface Workspace {
-    id: string;
-    title: string;
-    description: string;
-    visibility: boolean;
-    status: WorkspaceStatus;
-    createdAt: string;
-    updatedAt: string;
-}
+export { WorkspaceStatus };
+export type { Workspace };
+
 export interface CreateWorkspace {
     title: string;
     description?: string;

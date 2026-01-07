@@ -1,29 +1,10 @@
-export const BoardVisibility = {
-    PRIVATE: 'private',
-    WORKSPACE: 'workspace',
-    PUBLIC: 'public'
-} as const;
-export type BoardVisibility = (typeof BoardVisibility)[keyof typeof BoardVisibility];
 
-export const BoardStatus = {
-    ACTIVE: 'active',
-    ARCHIVED: 'archived'
-} as const;
-export type BoardStatus = (typeof BoardStatus)[keyof typeof BoardStatus];
+import { BoardVisibility, BoardStatus } from "@/shared/lib/types";
+import type { Board } from "@/shared/lib/types";
 
-// board
-export interface Board {
-    id: string;
-    title: string;
-    description: string;
-    coverUrl: string;
-    visibility: BoardVisibility;
-    ownerId: string;
-    status: BoardStatus;
-    workspaceId: string;
-    createdAt: string;
-    updatedAt: string;
-}
+export { BoardVisibility, BoardStatus };
+export type { Board };
+
 export interface CreateBoard {
     title: string;
     description?: string;
