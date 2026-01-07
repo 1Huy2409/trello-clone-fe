@@ -1,7 +1,7 @@
-import { LoginForm } from "@/features/login-form/ui/LoginForm";
+import { LoginForm } from "@/features/auth/ui/LoginForm";
 
 export default function LoginPage() {
-    return (
+  return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm md:max-w-4xl">
         <LoginForm />
