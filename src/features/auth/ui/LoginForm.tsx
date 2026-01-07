@@ -7,7 +7,7 @@ import avagit from "/avagit.jpg"
 import { useState } from "react"
 import { api } from "@/shared/api/api.shared"
 import { Link, useNavigate } from "react-router"
-import { useAuthStore } from "@/shared/stores/authStore"
+import { useSessionStore } from "@/entities/session"
 
 export function LoginForm({
   className,
@@ -23,7 +23,7 @@ export function LoginForm({
       const data = await api.auth.login({ username, password })
       const accessToken = data.responseObject.accessToken;
       console.log("Access Token: ", accessToken)
-      useAuthStore.getState().setAccessToken(accessToken);
+      useSessionStore.getState().setAccessToken(accessToken);
       console.log("Login successful:", data)
       navigate("/")
     }

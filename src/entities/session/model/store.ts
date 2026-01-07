@@ -8,7 +8,7 @@ interface AuthState {
     logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
+export const useSessionStore = create<AuthState>()(
     persist(
         (set) => ({
             accessToken: null,
