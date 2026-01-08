@@ -1,7 +1,7 @@
 
 import { create } from 'zustand';
 import { WorkspaceStatus, BoardVisibility, BoardStatus } from "../lib/types";
-import type { User, Workspace, Board, WorkspaceMember, BoardMember, List } from "../lib/types";
+import type { User, Workspace, Board, WorkspaceMember, BoardMember, List, Card, CardMember } from "../lib/types";
 
 interface CommonStore {
     workspaces: Workspace[];
@@ -9,6 +9,8 @@ interface CommonStore {
     workspaceMembers: WorkspaceMember[];
     boardMembers: BoardMember[];
     lists: List[];
+    cards: Card[];
+    cardMembers: CardMember[];
     currentUser: User | null;
 }
 
@@ -193,6 +195,64 @@ const mockLists: List[] = [
     { id: 'l-11', title: 'Email Campaign', position: '2', isArchived: false, boardId: 'b-5' },
 ];
 
+const mockCardMembers: CardMember[] = [
+    { id: 'cm-1', userId: '1', fullname: 'Huy Nguyen', avatarUrl: 'https://github.com/shadcn.png', cardId: 'c-1' },
+    { id: 'cm-2', userId: '2', fullname: 'Alice Johnson', avatarUrl: '', cardId: 'c-1' },
+    { id: 'cm-3', userId: '1', fullname: 'Huy Nguyen', avatarUrl: 'https://github.com/shadcn.png', cardId: 'c-3' },
+    { id: 'cm-4', userId: '3', fullname: 'Bob Smith', avatarUrl: '', cardId: 'c-4' }
+];
+
+const mockCards: Card[] = [
+    {
+        id: 'c-1',
+        title: 'Research React Query',
+        description: 'Investigate how to use TanStack Query for state management',
+        cardMembers: [mockCardMembers[0], mockCardMembers[1]],
+        position: '1',
+        coverUrl: '',
+        priority: 'high',
+        dueDate: new Date(Date.now() + 86400000 * 2).toISOString(),
+        boardId: 'b-1',
+        listId: 'l-1',
+    },
+    {
+        id: 'c-2',
+        title: 'Setup Tailwind CSS',
+        description: 'Configure tailwind.config.js and add base styles',
+        cardMembers: [],
+        position: '2',
+        coverUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2Vic2l0ZXxlbnwwfHwwfHx8MA%3D%3D',
+        priority: 'medium',
+        dueDate: new Date(Date.now() + 86400000 * 5).toISOString(),
+        boardId: 'b-1',
+        listId: 'l-1',
+    },
+    {
+        id: 'c-3',
+        title: 'Implement Sidebar',
+        description: 'Create responsive sidebar with navigation links',
+        cardMembers: [mockCardMembers[2]],
+        position: '1',
+        coverUrl: '',
+        priority: 'high',
+        dueDate: new Date(Date.now() + 86400000).toISOString(),
+        boardId: 'b-1',
+        listId: 'l-2',
+    },
+    {
+        id: 'c-4',
+        title: 'Design DB Schema',
+        description: 'Draw ERD for the application',
+        cardMembers: [mockCardMembers[3]],
+        position: '1',
+        coverUrl: '',
+        priority: 'critical',
+        dueDate: new Date(Date.now() + 86400000 * 3).toISOString(),
+        boardId: 'b-2',
+        listId: 'l-5',
+    }
+];
+
 export const useCommonStore = create<CommonStore>((set) => ({
     currentUser: mockUser,
     workspaces: mockWorkspaces,
@@ -200,4 +260,6 @@ export const useCommonStore = create<CommonStore>((set) => ({
     workspaceMembers: mockWorkspaceMembers,
     boardMembers: mockBoardMembers,
     lists: mockLists,
+    cards: mockCards,
+    cardMembers: mockCardMembers,
 }));
