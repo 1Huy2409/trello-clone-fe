@@ -40,6 +40,15 @@ export interface Workspace {
     createdAt: string;
     updatedAt: string;
 }
+export interface WorkspaceMember {
+    id: string;
+    userId: string;
+    fullname: string;
+    workspaceId: string;
+    roleName: string;
+    createdAt: string;
+    updatedAt: string;
+}
 
 export interface Board {
     id: string;
@@ -52,4 +61,20 @@ export interface Board {
     workspaceId: string;
     createdAt: string;
     updatedAt: string;
+}
+export interface BoardMember {
+    id: string;
+    userId: string;
+    boardId: string;
+    roleName: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface List {
+    id: string;
+    title: string;
+    position: string;
+    isArchived: boolean;
+    boardId: string;
 }

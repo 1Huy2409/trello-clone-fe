@@ -1,9 +1,9 @@
 
 import { BoardVisibility, BoardStatus } from "@/shared/lib/types";
-import type { Board } from "@/shared/lib/types";
+import type { Board, BoardMember } from "@/shared/lib/types";
 
 export { BoardVisibility, BoardStatus };
-export type { Board };
+export type { Board, BoardMember };
 
 export interface CreateBoard {
     title: string;
@@ -17,14 +17,4 @@ export interface UpdateBoard {
     description?: string;
     coverUrl?: string;
     visibility?: BoardVisibility;
-}
-
-// board member
-export interface BoardMember {
-    id: string;
-    userId: string;
-    boardId: string;
-    roleName: string;
-    createdAt: string;
-    updatedAt: string;
 }

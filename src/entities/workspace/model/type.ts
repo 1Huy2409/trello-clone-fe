@@ -1,10 +1,10 @@
 
 import { WorkspaceStatus } from "@/shared/lib/types";
-import type { Workspace } from "@/shared/lib/types";
+import type { Workspace, WorkspaceMember } from "@/shared/lib/types";
 
 // workspace
 export { WorkspaceStatus };
-export type { Workspace };
+export type { Workspace, WorkspaceMember };
 
 export interface CreateWorkspace {
     title: string;
@@ -18,15 +18,7 @@ export interface UpdateWorkspace {
 }
 
 // workspace member
-export interface WorkspaceMember {
-    id: string;
-    userId: string;
-    fullname: string;
-    workspaceId: string;
-    roleName: string;
-    createdAt: string;
-    updatedAt: string;
-}
+
 export interface UpdateWorkspaceMemberRole {
     roleId: string;
 }
