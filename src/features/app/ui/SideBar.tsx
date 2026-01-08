@@ -5,7 +5,7 @@ import {
   SidebarHeader,
 } from "@/shared/components/ui/sidebar"
 import { mockUser } from "@/shared/stores/commonStore";
-import { 
+import {
   Layout,
   Kanban,
 } from 'lucide-react';
@@ -18,10 +18,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: '/',
       icon: Layout,
       isActive: true
+    },
+    {
+      title: 'Workspace',
+      url: '/workspace',
+      icon: Kanban,
+      isActive: false
     }
   ]
   const userData = mockUser ? {
-    name: mockUser.username,
+    name: mockUser.fullname,
     email: mockUser.email,
     avatar: mockUser.avatarUrl
   } : {

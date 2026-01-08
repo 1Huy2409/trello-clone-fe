@@ -1,8 +1,30 @@
+import { SelectedBoardIdContext, SetIsEditDialogOpenContext } from "@/features/dashboard/shared/context";
+import { CreateBoardDialog } from "@/features/dashboard/ui/create-board-dialog";
+import { CreateWorkspaceDialog } from "@/features/dashboard/ui/create-workspace-dialog";
+import { EditBoardDialog } from "@/features/dashboard/ui/edit-board-dialog";
+import { WorkSpaceCard } from "@/features/dashboard/ui/workspace-card";
 import { Button } from "@/shared/components/ui/button";
+import { useCommonStore } from "@/shared/stores/commonStore";
 import { Plus } from "lucide-react";
+import { useContext, useState } from "react";
 
 export default function DashboardPage() {
-  return (
+    const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
+    const [isCreateBoardOpen, setIsCreateBoardOpen] = useState(false);
+    const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [selectedWorkspaceForBoard, setSelectedWorkspaceForBoard] = useState<
+        string | null
+    >(null);
+    const { boards, workspaces } = useCommonStore();
+    const allWorkspaces = Object.values(workspaces);
+    const selectedBoardId = useContext(SelectedBoardIdContext);
+
+    const getWorkspaceBoards = (workspaceId: string) =>
+        boards.filter((board) => board.workspaceId === workspaceId);
+
+    const selectedBoard =
+        boards.find((board) => board.id === selectedBoardId) || null;
+    return (
         <div className="flex-1 space-y-6 p-8 pt-6">
             <div className="flex items-center justify-between">
                 <div>
@@ -14,12 +36,68 @@ export default function DashboardPage() {
                     </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                    <Button>
+                    <Button onClick={() => setIsCreateWorkspaceOpen(true)}>
                         <Plus className="mr-2 h-4 w-4" />
                         New Workspace
                     </Button>
-                </div>  
+                </div>
             </div>
+            {allWorkspaces.length === 0 ? (
+                <div className="flex flex-col items-center justify-center space-y-4 py-12">
+                    <div className="text-center space-y-2">
+                        <h3 className="text-xl font-semibold">
+                            No workspaces yet
+                        </h3>
+                        <p className="text-muted-foreground">
+                            Create your first workspace to get started
+                        </p>
+                    </div>
+                    <Button onClick={() => setIsCreateWorkspaceOpen(true)}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Create Your First Workspace
+                    </Button>
+                </div>
+            ) : (
+                <div className="space-y-8">
+                    <SetIsEditDialogOpenContext value={setIsEditDialogOpen}>
+                        {allWorkspaces.map((workspace) => {
+                            const workspaceBoards = getWorkspaceBoards(
+                                workspace.id
+                            );
+
+                            return (
+                                <WorkSpaceCard
+                                    key={workspace.id}
+                                    workspace={workspace}
+                                    workspaceBoards={workspaceBoards}
+                                    setIsCreateBoardOpen={setIsCreateBoardOpen}
+                                    setSelectedWorkspaceForBoard={
+                                        setSelectedWorkspaceForBoard
+                                    }
+                                />
+                            );
+                        })}
+                    </SetIsEditDialogOpenContext>
+                </div>
+            )}
+
+            <EditBoardDialog board={selectedBoard} open={isEditDialogOpen} onOpenChange={
+                (value) => setIsEditDialogOpen(value)
+            } />
+
+            <CreateBoardDialog
+                open={isCreateBoardOpen}
+                onOpenChange={(open) => {
+                    setIsCreateBoardOpen(open);
+                    if (!open) setSelectedWorkspaceForBoard(null);
+                }}
+                workspaceId={selectedWorkspaceForBoard}
+            />
+
+            <CreateWorkspaceDialog
+                open={isCreateWorkspaceOpen}
+                onOpenChange={setIsCreateWorkspaceOpen}
+            />
         </div>
     );
 }
