@@ -4,6 +4,7 @@ import { AppLayout } from "./features/app/ui/AppLayout"
 import LoginPage from "./pages/auth/ui/LoginPage"
 import SignupPage from "./pages/auth/ui/RegisterPage"
 import DashboardPage from "./pages/dasboard/ui/DashboardPage"
+import WorkspacePage from "./pages/workspace/ui/WorkspacePage"
 function App() {
   return (
     <BrowserRouter basename="/my-trello/">
@@ -14,6 +15,7 @@ function App() {
         </Route>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<DashboardPage />} />
+          <Route path="workspace/:id" element={<WorkspacePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
