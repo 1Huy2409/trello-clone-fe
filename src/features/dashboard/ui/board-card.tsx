@@ -16,7 +16,7 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 
-import { SetIsEditDialogOpenContext } from "../shared/context";
+import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "../shared/context";
 import { useContext } from "react";
 import { useCommonStore } from "@/shared/stores/commonStore";
 
@@ -29,6 +29,7 @@ export function BoardCard({ board }: { board: Board }) {
         console.log("Delete board with ID: ", boardId);
     }
     const setIsEditDialogOpen = useContext(SetIsEditDialogOpenContext);
+    const setSelectedBoardId = useContext(SetSelectedBoardIdContext);
     return (
         <>
             <Card className="cursor-pointer hover:shadow-md transition-shadow group relative">
@@ -46,6 +47,7 @@ export function BoardCard({ board }: { board: Board }) {
                         <DropdownMenuContent align="end">
                             <DropdownMenuItem
                                 onClick={() => {
+                                    setSelectedBoardId(board.id);
                                     setIsEditDialogOpen(true);
                                 }}
                             >

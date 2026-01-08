@@ -40,6 +40,34 @@ export interface AddWorkspaceMember {
 export interface UpdateWorkspaceMember {
     roleId: string;
 }
+export const WorkspacePermission = {
+    MANAGE_WORKSPACE: 'manage_workspace',
+    MANAGE_MEMBERS: 'manage_members',
+    MANAGE_ROLES: 'manage_roles',
+    CREATE_BOARD: 'create_board',
+    MANAGE_BOARD: 'manage_board',
+} as const;
+
+export type WorkspacePermission = (typeof WorkspacePermission)[keyof typeof WorkspacePermission];
+
+export interface WorkspaceRole {
+    id: string;
+    name: string;
+    description: string;
+    permissions: string[];
+    workspaceId: string;
+    isDefault: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface PermissionDefinition {
+    id: string;
+    action: string;
+    description: string;
+    isSystem: boolean;
+}
+
 export interface CreateWorkspaceRole {
     name: string;
     description: string;
