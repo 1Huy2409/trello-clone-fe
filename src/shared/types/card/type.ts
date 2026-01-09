@@ -28,8 +28,8 @@ export interface MoveCard {
     cardId: string;
     targetBoardId: string;
     targetListId: string;
-    beforeCardId: string;
-    afterCardId: string;
+    beforeCardId: string | null;
+    afterCardId: string | null;
 }
 export interface CopyCard extends CreateCard {
     title: string;
@@ -37,8 +37,8 @@ export interface CopyCard extends CreateCard {
 export interface ReorderCard {
     cardId: string;
     targetListId: string;
-    beforeCardId: string;
-    afterCardId: string;
+    beforeCardId: string | null;
+    afterCardId: string | null;
 }
 
 export interface CardMember {

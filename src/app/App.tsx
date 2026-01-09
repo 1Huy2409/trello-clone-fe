@@ -8,6 +8,8 @@ import WorkspacePage from "../pages/workspace/ui/WorkspacePage"
 import WorkspaceSettingsPage from "../pages/workspace/ui/WorkspaceSettingsPage"
 import WorkspaceMembersPage from "../pages/workspace/ui/WorkspaceMembersPage"
 
+import BoardPage from "../pages/board/ui/BoardPage"
+
 function App() {
   return (
     <BrowserRouter basename="/my-trello/">
@@ -21,6 +23,7 @@ function App() {
           <Route path="workspace/:id" element={<WorkspacePage />} />
           <Route path="workspace/:id/settings" element={<WorkspaceSettingsPage />} />
           <Route path="workspace/:id/members" element={<WorkspaceMembersPage />} />
+          <Route path="board/:id" element={<BoardPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
