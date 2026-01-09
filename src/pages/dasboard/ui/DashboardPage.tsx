@@ -1,4 +1,4 @@
-import { SelectedBoardIdContext, SetIsEditDialogOpenContext } from "@/features/dashboard/shared/context";
+import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
 import { CreateBoardDialog } from "@/features/dashboard/ui/create-board-dialog";
 import { CreateWorkspaceDialog } from "@/features/dashboard/ui/create-workspace-dialog";
 import { EditBoardDialog } from "@/features/dashboard/ui/edit-board-dialog";
@@ -6,7 +6,7 @@ import { WorkSpaceCard } from "@/features/dashboard/ui/workspace-card";
 import { Button } from "@/shared/components/ui/button";
 import { useCommonStore } from "@/shared/stores/commonStore";
 import { Plus } from "lucide-react";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 export default function DashboardPage() {
     const [isCreateWorkspaceOpen, setIsCreateWorkspaceOpen] = useState(false);
@@ -15,9 +15,11 @@ export default function DashboardPage() {
     const [selectedWorkspaceForBoard, setSelectedWorkspaceForBoard] = useState<
         string | null
     >(null);
+
+    const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+
     const { boards, workspaces } = useCommonStore();
     const allWorkspaces = Object.values(workspaces);
-    const selectedBoardId = useContext(SelectedBoardIdContext);
 
     const getWorkspaceBoards = (workspaceId: string) =>
         boards.filter((board) => board.workspaceId === workspaceId);
@@ -59,25 +61,27 @@ export default function DashboardPage() {
                 </div>
             ) : (
                 <div className="space-y-8">
-                    <SetIsEditDialogOpenContext value={setIsEditDialogOpen}>
-                        {allWorkspaces.map((workspace) => {
-                            const workspaceBoards = getWorkspaceBoards(
-                                workspace.id
-                            );
+                    <SetIsEditDialogOpenContext.Provider value={setIsEditDialogOpen}>
+                        <SetSelectedBoardIdContext.Provider value={setSelectedBoardId}>
+                            {allWorkspaces.map((workspace) => {
+                                const workspaceBoards = getWorkspaceBoards(
+                                    workspace.id
+                                );
 
-                            return (
-                                <WorkSpaceCard
-                                    key={workspace.id}
-                                    workspace={workspace}
-                                    workspaceBoards={workspaceBoards}
-                                    setIsCreateBoardOpen={setIsCreateBoardOpen}
-                                    setSelectedWorkspaceForBoard={
-                                        setSelectedWorkspaceForBoard
-                                    }
-                                />
-                            );
-                        })}
-                    </SetIsEditDialogOpenContext>
+                                return (
+                                    <WorkSpaceCard
+                                        key={workspace.id}
+                                        workspace={workspace}
+                                        workspaceBoards={workspaceBoards}
+                                        setIsCreateBoardOpen={setIsCreateBoardOpen}
+                                        setSelectedWorkspaceForBoard={
+                                            setSelectedWorkspaceForBoard
+                                        }
+                                    />
+                                );
+                            })}
+                        </SetSelectedBoardIdContext.Provider>
+                    </SetIsEditDialogOpenContext.Provider>
                 </div>
             )}
 

@@ -6,22 +6,18 @@ import { Outlet, useLocation } from "react-router";
 import { PageLoader } from "@/shared/components/ui/page-loader";
 
 export function AppLayout() {
-    const location = useLocation();
-    return (
+  const location = useLocation();
+  return (
     <SidebarProvider>
-      <div className="flex h-screen bg-gray-50 w-full">
-        <AppSidebar />
-        <SidebarInset>
-          <Header />
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <main className="flex-1 overflow-hidden">
-              <Suspense key={location.pathname} fallback={<PageLoader />}>
-                <Outlet />
-              </Suspense>
-            </main>
-          </div>
-        </SidebarInset>
-      </div>
+      <AppSidebar />
+      <SidebarInset className="h-screen overflow-hidden">
+        <Header />
+        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
+          <Suspense key={location.pathname} fallback={<PageLoader />}>
+            <Outlet />
+          </Suspense>
+        </div>
+      </SidebarInset>
     </SidebarProvider>
   );
 }

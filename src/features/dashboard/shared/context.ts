@@ -7,3 +7,4 @@ export const SetIsEditDialogOpenContext = createContext(
     }
 );
 export const SelectedBoardIdContext = createContext<string | null>(null);
+export const SetSelectedBoardIdContext = createContext<(id: string) => void>(() => { });
