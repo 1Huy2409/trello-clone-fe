@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarInset } from "@/shared/components/ui/sidebar";
-import { AppSidebar } from "./SideBar";
-import Header from "./Header";
+import { AppSidebar } from "@/widgets/sidebar";
+import { Header } from "@/widgets/header";
 import { Suspense } from "react";
 import { Outlet, useLocation } from "react-router";
 import { PageLoader } from "@/shared/components/ui/page-loader";

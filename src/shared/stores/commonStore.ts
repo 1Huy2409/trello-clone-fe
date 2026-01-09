@@ -232,23 +232,23 @@ const mockBoardMembers: BoardMember[] = [
 
 const mockLists: List[] = [
     // Board 1: Frontend
-    { id: 'l-1', title: 'Backlog', position: '1', isArchived: false, boardId: 'b-1' },
-    { id: 'l-2', title: 'In Progress', position: '2', isArchived: false, boardId: 'b-1' },
-    { id: 'l-3', title: 'Code Review', position: '3', isArchived: false, boardId: 'b-1' },
-    { id: 'l-4', title: 'Done', position: '4', isArchived: false, boardId: 'b-1' },
+    { id: 'l-1', title: 'Backlog', position: '1000', isArchived: false, boardId: 'b-1' },
+    { id: 'l-2', title: 'In Progress', position: '2000', isArchived: false, boardId: 'b-1' },
+    { id: 'l-3', title: 'Code Review', position: '3000', isArchived: false, boardId: 'b-1' },
+    { id: 'l-4', title: 'Done', position: '4000', isArchived: false, boardId: 'b-1' },
 
     // Board 2: Backend
-    { id: 'l-5', title: 'API Design', position: '1', isArchived: false, boardId: 'b-2' },
-    { id: 'l-6', title: 'Implementation', position: '2', isArchived: false, boardId: 'b-2' },
+    { id: 'l-5', title: 'API Design', position: '1000', isArchived: false, boardId: 'b-2' },
+    { id: 'l-6', title: 'Implementation', position: '2000', isArchived: false, boardId: 'b-2' },
 
     // Board 3: Home Reno
-    { id: 'l-7', title: 'Ideas', position: '1', isArchived: false, boardId: 'b-3' },
-    { id: 'l-8', title: 'Contractors', position: '2', isArchived: false, boardId: 'b-3' },
-    { id: 'l-9', title: 'Purchases', position: '3', isArchived: false, boardId: 'b-3' },
+    { id: 'l-7', title: 'Ideas', position: '1000', isArchived: false, boardId: 'b-3' },
+    { id: 'l-8', title: 'Contractors', position: '2000', isArchived: false, boardId: 'b-3' },
+    { id: 'l-9', title: 'Purchases', position: '3000', isArchived: false, boardId: 'b-3' },
 
     // Board 5: Marketing
-    { id: 'l-10', title: 'Social Media', position: '1', isArchived: false, boardId: 'b-5' },
-    { id: 'l-11', title: 'Email Campaign', position: '2', isArchived: false, boardId: 'b-5' },
+    { id: 'l-10', title: 'Social Media', position: '1000', isArchived: false, boardId: 'b-5' },
+    { id: 'l-11', title: 'Email Campaign', position: '2000', isArchived: false, boardId: 'b-5' },
 ];
 
 const mockCardMembers: CardMember[] = [
@@ -264,7 +264,7 @@ const mockCards: Card[] = [
         title: 'Research React Query',
         description: 'Investigate how to use TanStack Query for state management',
         cardMembers: [mockCardMembers[0], mockCardMembers[1]],
-        position: '1',
+        position: '1000',
         coverUrl: '',
         priority: 'high',
         dueDate: new Date(Date.now() + 86400000 * 2).toISOString(),
@@ -276,7 +276,7 @@ const mockCards: Card[] = [
         title: 'Setup Tailwind CSS',
         description: 'Configure tailwind.config.js and add base styles',
         cardMembers: [],
-        position: '2',
+        position: '2000',
         coverUrl: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8d2Vic2l0ZXxlbnwwfHwwfHx8MA%3D%3D',
         priority: 'medium',
         dueDate: new Date(Date.now() + 86400000 * 5).toISOString(),
@@ -288,7 +288,7 @@ const mockCards: Card[] = [
         title: 'Implement Sidebar',
         description: 'Create responsive sidebar with navigation links',
         cardMembers: [mockCardMembers[2]],
-        position: '1',
+        position: '1000',
         coverUrl: '',
         priority: 'high',
         dueDate: new Date(Date.now() + 86400000).toISOString(),
@@ -300,7 +300,7 @@ const mockCards: Card[] = [
         title: 'Design DB Schema',
         description: 'Draw ERD for the application',
         cardMembers: [mockCardMembers[3]],
-        position: '1',
+        position: '1000',
         coverUrl: '',
         priority: 'critical',
         dueDate: new Date(Date.now() + 86400000 * 3).toISOString(),

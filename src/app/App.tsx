@@ -1,12 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router"
-import { AuthLayout } from "./features/app/ui/AuthLayout"
-import { AppLayout } from "./features/app/ui/AppLayout"
-import LoginPage from "./pages/auth/ui/LoginPage"
-import SignupPage from "./pages/auth/ui/RegisterPage"
-import DashboardPage from "./pages/dasboard/ui/DashboardPage"
-import WorkspacePage from "./pages/workspace/ui/WorkspacePage"
-import WorkspaceSettingsPage from "./pages/workspace/ui/WorkspaceSettingsPage"
-import WorkspaceMembersPage from "./pages/workspace/ui/WorkspaceMembersPage"
+import { AuthLayout } from "./layouts/AuthLayout"
+import { AppLayout } from "./layouts/AppLayout"
+import LoginPage from "../pages/auth/ui/LoginPage"
+import SignupPage from "../pages/auth/ui/RegisterPage"
+import DashboardPage from "../pages/dashboard/ui/DashboardPage"
+import WorkspacePage from "../pages/workspace/ui/WorkspacePage"
+import WorkspaceSettingsPage from "../pages/workspace/ui/WorkspaceSettingsPage"
+import WorkspaceMembersPage from "../pages/workspace/ui/WorkspaceMembersPage"
 
 function App() {
   return (

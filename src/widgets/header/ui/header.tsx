@@ -3,7 +3,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 
-export default function Header() {
+export function Header() {
     const location = useLocation();
 
     const title = useMemo(() => {
