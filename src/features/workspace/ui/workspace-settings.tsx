@@ -2,7 +2,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Separator } from "@/shared/components/ui/separator";
 import type { Workspace, WorkspaceRole } from "@/shared/lib/types";
-import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash } from "lucide-react";
+import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash, Archive } from "lucide-react";
 import { useState } from "react";
 import { useCommonStore } from "@/shared/stores/commonStore";
 import {
@@ -62,6 +62,10 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
 
     const handleDeleteRole = (roleId: string) => {
         console.log("Delete Role:", roleId);
+    };
+
+    const handleArchive = () => {
+        console.log("Archive Workspace option clicked");
     };
 
     return (
@@ -195,6 +199,22 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                 onSave={handleSaveRole}
                 onCreatePermission={handleCreatePermission}
             />
+
+            <Separator />
+
+            {/* Archive Workspace */}
+            <div className="space-y-4">
+                <div>
+                    <h3 className="text-lg font-medium">Archive Workspace</h3>
+                    <p className="text-sm text-muted-foreground">
+                        Archive this workspace to hide it from your dashboard. You can unarchive it anytime.
+                    </p>
+                </div>
+                <Button variant="outline" onClick={handleArchive}>
+                    <Archive className="w-4 h-4 mr-2" />
+                    Archive Workspace
+                </Button>
+            </div>
 
             <Separator />
 
