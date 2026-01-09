@@ -26,7 +26,7 @@ export function BoardCard({ board }: { board: Board }) {
     const membersEachBoard = boardMembers.filter((member) => member.boardId === board.id);
 
     const handleDelete = (boardId: string) => {
-        console.log("Delete board with ID: ", boardId);
+        alert('Delete board with ID: ' + boardId);
     }
     const setIsEditDialogOpen = useContext(SetIsEditDialogOpenContext);
     const setSelectedBoardId = useContext(SetSelectedBoardIdContext);
