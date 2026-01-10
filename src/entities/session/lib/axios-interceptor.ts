@@ -44,6 +44,11 @@ export const setupAuthInterceptor = (instance: AxiosInstance) => {
             const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
 
             if (error.response?.status === 401 && !originalRequest._retry) {
+                // Skip token refresh for login requests
+                if (originalRequest.url?.includes('/auth/login')) {
+                    return Promise.reject(error);
+                }
+
                 if (isRefreshing) {
                     // Queue the request if refreshing is already in progress
                     return new Promise<void>((resolve, reject) => {

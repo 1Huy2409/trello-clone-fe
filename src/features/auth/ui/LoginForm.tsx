@@ -1,13 +1,14 @@
 import { cn } from "@/shared/lib/utils"
+import { Alert, AlertDescription } from "@/shared/components/ui/alert"
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import avagit from "/avagit.jpg"
 import { useState } from "react"
-import { api } from "@/shared/api/api.shared"
 import { Link, useNavigate } from "react-router"
 import { useSessionStore } from "@/entities/session"
+import { login } from "../api/loginApi"
 
 export function LoginForm({
   className,
@@ -16,11 +17,14 @@ export function LoginForm({
   // call login api here on form submit
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError(null)
     try {
-      const data = await api.auth.login({ username, password })
+      const data = await login(username, password)
       const accessToken = data.responseObject.accessToken;
       console.log("Access Token: ", accessToken)
       useSessionStore.getState().setAccessToken(accessToken);
@@ -29,7 +33,13 @@ export function LoginForm({
     }
     catch (err: any) {
       console.error("Login failed:", err)
-      navigate("/auth/login")
+      if (err.response && err.response.data) {
+        const { message } = err.response.data;
+        setError(message || "Login failed. Please check your credentials.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+      // navigate("/auth/login") // Remove this as we want to stay on page to show error
     }
   }
   return (
@@ -37,7 +47,7 @@ export function LoginForm({
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
-            // onSubmit={handleLogin} 
+            onSubmit={handleLogin}
             className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
@@ -46,13 +56,18 @@ export function LoginForm({
                   Login to your Trello account
                 </p>
               </div>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <div className="grid gap-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
                   type="text"
-                  // value={username}
-                  // onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   placeholder="username_123"
                   required
                 />
@@ -68,7 +83,7 @@ export function LoginForm({
                   </a>
                 </div>
                 <Input id="password" type="password"
-                  // value={password} onChange={(e) => setPassword(e.target.value)} 
+                  value={password} onChange={(e) => setPassword(e.target.value)}
                   required />
               </div>
               <Button type="submit" className="w-full">
