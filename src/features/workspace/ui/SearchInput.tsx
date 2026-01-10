@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import { useContext } from 'react';
-import { WorkspaceDisplayContext } from '../shared/context';
+import { WorkspaceDisplayContext } from '@/features/workspace/shared/context'; // Updated import path to match existing structure (assuming context stays)
 import { Input } from '@/shared/components/ui/input';
 
 export default function SearchInput() {

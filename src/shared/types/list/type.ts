@@ -13,13 +13,13 @@ export interface UpdateList {
 }
 export interface ReorderList {
     listId: string;
-    beforeListId: string;
-    afterListId: string;
+    beforeListId: string | null;
+    afterListId: string | null;
 }
 export interface MoveList {
     listId: string;
     targetBoardId: string;
-    beforeListId: string;
+    beforeListId: string | null;
     afterListId: string;
 }
 export interface CopyList {

@@ -1,4 +1,4 @@
-import { WorkspaceSettings } from "@/features/workspace/ui/workspace-settings";
+import { WorkspaceSettings } from "@/widgets/workspace/ui/WorkspaceSettings";
 import { useCommonStore } from "@/shared/stores/commonStore";
 import { useParams } from "react-router";
 

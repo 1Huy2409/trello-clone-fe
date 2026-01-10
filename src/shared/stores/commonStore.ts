@@ -14,6 +14,7 @@ interface CommonStore {
     currentUser: User | null;
     workspaceRoles: WorkspaceRole[];
     permissions: PermissionDefinition[];
+    addList: (boardId: string, title: string) => void;
 }
 
 import { WorkspacePermission, type WorkspaceRole, type PermissionDefinition } from '../types/workspace/type';
@@ -320,4 +321,20 @@ export const useCommonStore = create<CommonStore>((set) => ({
     cardMembers: mockCardMembers,
     workspaceRoles: mockWorkspaceRoles,
     permissions: mockPermissions,
+
+    addList: (boardId: string, title: string) => set((state) => {
+        const boardLists = state.lists.filter(l => l.boardId === boardId);
+        const maxPosition = boardLists.length > 0
+            ? Math.max(...boardLists.map(l => parseInt(l.position)))
+            : 0;
+
+        const newList: List = {
+            id: `l-${Date.now()}`,
+            title,
+            position: (maxPosition + 1000).toString(),
+            isArchived: false,
+            boardId,
+        };
+        return { lists: [...state.lists, newList] };
+    }),
 }));

@@ -1,25 +1,24 @@
-import type { Board, Workspace } from "@/shared/lib/types";
-import { Plus, Kanban } from 'lucide-react';
+import type { Workspace } from "@/shared/lib/types";
+import { Kanban, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
-import { BoardCard } from "./board-card";
 
-
-export function WorkSpaceCard({
-    workspace,
-    workspaceBoards,
-    setIsCreateBoardOpen,
-    setSelectedWorkspaceForBoard,
-}: {
-    children?: React.ReactNode;
+interface WorkspaceCardProps {
     workspace: Workspace;
-    workspaceBoards: Board[];
-    setIsCreateBoardOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setSelectedWorkspaceForBoard: React.Dispatch<
-        React.SetStateAction<string | null>
-    >;
-}) {
+    boardCount: number;
+    action?: React.ReactNode;
+    children?: React.ReactNode;
+    onCreateBoard?: () => void;
+}
+
+export function WorkspaceCard({
+    workspace,
+    boardCount,
+    action,
+    children, // This will be the grid of BoardCards
+    onCreateBoard
+}: WorkspaceCardProps) {
     return (
         <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -38,23 +37,14 @@ export function WorkSpaceCard({
                         </p>
                     )}
                     <p className="text-xs text-muted-foreground">
-                        {workspaceBoards.length} board
-                        {workspaceBoards.length !== 1 ? "s" : ""}
+                        {boardCount} board
+                        {boardCount !== 1 ? "s" : ""}
                     </p>
                 </div>
-                <Button
-                    variant="outline"
-                    onClick={() => {
-                        setSelectedWorkspaceForBoard(workspace.id);
-                        setIsCreateBoardOpen(true);
-                    }}
-                >
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add Board
-                </Button>
+                {action}
             </div>
 
-            {workspaceBoards.length === 0 ? (
+            {boardCount === 0 ? (
                 <Card className="border-dashed">
                     <CardContent className="flex flex-col items-center justify-center py-8">
                         <Kanban className="h-8 w-8 text-muted-foreground mb-2" />
@@ -67,10 +57,7 @@ export function WorkSpaceCard({
                         </p>
                         <Button
                             size="sm"
-                            onClick={() => {
-                                setSelectedWorkspaceForBoard(workspace.id);
-                                setIsCreateBoardOpen(true);
-                            }}
+                            onClick={onCreateBoard}
                         >
                             <Plus className="mr-2 h-3 w-3" />
                             Create Board
@@ -79,9 +66,7 @@ export function WorkSpaceCard({
                 </Card>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {workspaceBoards.map((board) => (
-                        <BoardCard key={board.id} board={board} />
-                    ))}
+                    {children}
                 </div>
             )}
         </div>

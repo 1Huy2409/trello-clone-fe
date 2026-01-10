@@ -1,4 +1,4 @@
-import { WorkspaceMembers } from "@/features/workspace/ui/workspace-members";
+import { WorkspaceMembers } from "@/widgets/workspace/ui/WorkspaceMembers";
 import { useCommonStore } from "@/shared/stores/commonStore";
 import { useParams } from "react-router";
 

@@ -2,10 +2,12 @@ import { useParams } from "react-router";
 import { useCommonStore } from "@/shared/stores/commonStore";
 import { WorkspaceProvider } from "@/features/workspace/shared/workspace-context";
 import { useState } from "react";
-import WorkspaceDisplay from "@/features/workspace/ui/workspace-display";
-import { CreateBoardDialog } from "@/features/dashboard/ui/create-board-dialog";
-import SearchInput from "@/features/workspace/ui/search-input";
-import { EditBoardDialog } from "@/features/dashboard/ui/edit-board-dialog";
+// Widgets & Features
+import { WorkspaceBoardList } from "@/widgets/workspace/ui/WorkspaceBoardList";
+import SearchInput from "@/features/workspace/ui/SearchInput";
+import { CreateBoardDialog } from "@/features/board/ui/CreateBoardDialog";
+import { EditBoardDialog } from "@/features/board/ui/EditBoardDialog";
+// Context
 import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
 
 export default function WorkspacePage() {
@@ -21,6 +23,7 @@ export default function WorkspacePage() {
 
     const currentWorkspace = Object.values(workspaces).find((workspace) => workspace.id === id);
     const workspaceBoards = boards.filter((board) => board.workspaceId === id);
+
     if (!currentWorkspace) {
         return (
             <div className="flex items-center justify-center h-full">
@@ -56,14 +59,12 @@ export default function WorkspacePage() {
                 <SearchInput />
                 <SetIsEditDialogOpenContext.Provider value={setIsEditDialogOpen}>
                     <SetSelectedBoardIdContext.Provider value={setSelectedBoardId}>
-                        <WorkspaceDisplay
+                        <WorkspaceBoardList
                             setIsCreateBoardOpen={setIsCreateBoardOpen}
                         />
                     </SetSelectedBoardIdContext.Provider>
                 </SetIsEditDialogOpenContext.Provider>
-                <EditBoardDialog board={selectedBoard} open={isEditDialogOpen} onOpenChange={
-                    (value) => setIsEditDialogOpen(value)
-                } />
+                <EditBoardDialog board={selectedBoard} open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen} />
                 {/* Create Board Dialog */}
                 <CreateBoardDialog
                     open={isCreateBoardOpen}

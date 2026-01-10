@@ -13,49 +13,48 @@ import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 // import { useBoardStore } from '@/shared/stores/useBoardStore';
 
-interface CreateBoardDialogProps {
+interface CreateWorkspaceDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    workspaceId?: string | null;
 }
 
-export function CreateBoardDialog({ open, onOpenChange, workspaceId }: CreateBoardDialogProps) {
-    const [title, setTitle] = useState('');
+export function CreateWorkspaceDialog({ open, onOpenChange }: CreateWorkspaceDialogProps) {
+    const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     // const navigate = useNavigate();
-    // const { createBoard, currentWorkspace } = useBoardStore();
+    // const { createWorkspace, setCurrentWorkspace } = useBoardStore();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Submit create board!')
-        // const targetWorkspace = workspaceId || currentWorkspace;
-        // if (!title.trim() || !targetWorkspace) return;
+        console.log('Create workspace')
+        // if (!name.trim()) return;
 
-        // const boardId = createBoard(targetWorkspace, title.trim(), description.trim());
-        // setTitle('');
+        // const workspaceId = createWorkspace(name.trim(), description.trim());
+        // setCurrentWorkspace(workspaceId);
+        // setName('');
         // setDescription('');
         // onOpenChange(false);
-        // navigate(`/board/${boardId}`);
+        // navigate('/'); // Navigate to dashboard to see the new workspace
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create New Board</DialogTitle>
+                    <DialogTitle>Create New Workspace</DialogTitle>
                     <DialogDescription>
-                        Create a new board to organize your project tasks and collaborate with your team.
+                        Create a new workspace to organize your boards and collaborate with your team.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="title">Board Title</Label>
+                            <Label htmlFor="name">Workspace Name</Label>
                             <Input
-                                id="title"
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Enter board title"
+                                id="name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Enter workspace name"
                                 required
                             />
                         </div>
@@ -65,7 +64,7 @@ export function CreateBoardDialog({ open, onOpenChange, workspaceId }: CreateBoa
                                 id="description"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Enter board description"
+                                placeholder="Enter workspace description"
                             />
                         </div>
                     </div>
@@ -73,8 +72,8 @@ export function CreateBoardDialog({ open, onOpenChange, workspaceId }: CreateBoa
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={!title.trim()}>
-                            Create Board
+                        <Button type="submit" disabled={!name.trim()}>
+                            Create Workspace
                         </Button>
                     </DialogFooter>
                 </form>
