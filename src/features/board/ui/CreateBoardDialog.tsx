@@ -1,4 +1,5 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState } from 'react';
+// import { useNavigate } from 'react-router';
 import { Button } from '@/shared/components/ui/button';
 import {
     Dialog,
@@ -10,68 +11,48 @@ import {
 } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import type { Board } from '@/shared/lib/types';
-import { SelectedBoardIdContext, SetIsEditDialogOpenContext } from '../shared/context';
+// import { useBoardStore } from '@/shared/stores/useBoardStore';
 
-interface EditBoardDialogProps {
-    board: Board | null;
+interface CreateBoardDialogProps {
     open: boolean;
-    onOpenChange?: (open: boolean) => void;
+    onOpenChange: (open: boolean) => void;
+    workspaceId?: string | null;
 }
 
-export function EditBoardDialog({ board, open, onOpenChange }: EditBoardDialogProps) {
+export function CreateBoardDialog({ open, onOpenChange, workspaceId }: CreateBoardDialogProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    // const { updateBoard } = useBoardStore();
-
-    const setFunction = useContext(SetIsEditDialogOpenContext)
-    setFunction(true)
-
-    // Update local state when board changes or dialog opens
-    useEffect(() => {
-        if (open && board) {
-            setTitle(board.title);
-            setDescription(board.description || '');
-        }
-    }, [open, board]);
+    // const navigate = useNavigate();
+    // const { createBoard, currentWorkspace } = useBoardStore();
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // if (!title.trim() || !board) return;
+        console.log('Submit create board!')
+        // const targetWorkspace = workspaceId || currentWorkspace;
+        // if (!title.trim() || !targetWorkspace) return;
 
-        // updateBoard(board.id, {
-        //     title: title.trim(),
-        //     description: description.trim(),
-        // });
-        console.log('Submit edit board!')
-        onOpenChange && onOpenChange(false);
-    };
-
-    const handleCancel = () => {
-        // Reset form to original values
-        // if (board) {
-        //     setTitle(board.title);
-        //     setDescription(board.description || '');
-        // }
-        console.log('Cancel edit board!')
-        onOpenChange && onOpenChange(false);
+        // const boardId = createBoard(targetWorkspace, title.trim(), description.trim());
+        // setTitle('');
+        // setDescription('');
+        // onOpenChange(false);
+        // navigate(`/board/${boardId}`);
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Edit Board</DialogTitle>
+                    <DialogTitle>Create New Board</DialogTitle>
                     <DialogDescription>
-                        Update your board title and description.
+                        Create a new board to organize your project tasks and collaborate with your team.
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={handleSubmit}>
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="edit-title">Board Title</Label>
+                            <Label htmlFor="title">Board Title</Label>
                             <Input
-                                id="edit-title"
+                                id="title"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="Enter board title"
@@ -79,9 +60,9 @@ export function EditBoardDialog({ board, open, onOpenChange }: EditBoardDialogPr
                             />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="edit-description">Description (optional)</Label>
+                            <Label htmlFor="description">Description (optional)</Label>
                             <Input
-                                id="edit-description"
+                                id="description"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Enter board description"
@@ -89,11 +70,11 @@ export function EditBoardDialog({ board, open, onOpenChange }: EditBoardDialogPr
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={handleCancel}>
+                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancel
                         </Button>
                         <Button type="submit" disabled={!title.trim()}>
-                            Save Changes
+                            Create Board
                         </Button>
                     </DialogFooter>
                 </form>

@@ -9,7 +9,7 @@ interface ListProps {
     list: ListType;
     cards: CardType[];
     index: number;
-    headerAction?: React.ReactNode;
+    headerAction?: React.ReactNode | ((props: { onAddCard: () => void }) => React.ReactNode);
 }
 
 export const List = ({ list, cards, index, headerAction }: ListProps) => {
@@ -48,7 +48,9 @@ export const List = ({ list, cards, index, headerAction }: ListProps) => {
                         className="p-3 flex items-center justify-between font-medium text-sm"
                     >
                         <div className="truncate px-1">{list.title}</div>
-                        {headerAction}
+                        {typeof headerAction === "function"
+                            ? headerAction({ onAddCard: enableEditing })
+                            : headerAction}
                     </div>
 
                     {/* List Content (Droppable Area) */}

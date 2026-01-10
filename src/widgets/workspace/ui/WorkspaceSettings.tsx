@@ -11,7 +11,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import { RoleDialog } from "./role-dialog";
+import { RoleDialog } from "@/features/workspace/ui/RoleDialog";
 
 interface WorkspaceSettingsProps {
     workspace: Workspace;
