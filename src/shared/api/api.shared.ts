@@ -33,6 +33,10 @@ export const api = {
             const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.auth.verifyOTP, data);
             return res.data;
         },
+        resendOTP: async <T = any>(data: { email: string }): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.auth.requestOTP, data);
+            return res.data;
+        },
         refreshToken: async <T = any>(): Promise<ApiResponse<T>> => {
             const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.auth.refreshToken, {}, { withCredentials: true });
             return res.data;

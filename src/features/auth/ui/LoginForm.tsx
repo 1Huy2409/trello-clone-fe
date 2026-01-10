@@ -1,4 +1,5 @@
 import { cn } from "@/shared/lib/utils"
+import { Alert, AlertDescription } from "@/shared/components/ui/alert"
 import { Button } from "@/shared/components/ui/button"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { Input } from "@/shared/components/ui/input"
@@ -16,9 +17,12 @@ export function LoginForm({
   // call login api here on form submit
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate()
+
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setError(null)
     try {
       const data = await login(username, password)
       const accessToken = data.responseObject.accessToken;
@@ -29,7 +33,13 @@ export function LoginForm({
     }
     catch (err: any) {
       console.error("Login failed:", err)
-      navigate("/auth/login")
+      if (err.response && err.response.data) {
+        const { message } = err.response.data;
+        setError(message || "Login failed. Please check your credentials.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+      // navigate("/auth/login") // Remove this as we want to stay on page to show error
     }
   }
   return (
@@ -46,6 +56,11 @@ export function LoginForm({
                   Login to your Trello account
                 </p>
               </div>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
               <div className="grid gap-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
