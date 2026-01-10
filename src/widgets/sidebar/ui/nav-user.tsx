@@ -21,12 +21,31 @@ interface UserData {
   email: string;
   avatar: string;
 }
+import { useNavigate } from 'react-router';
+import { useSessionStore } from '@/entities/session';
+import { logout } from '@/features/auth/api/logoutApi';
 
 interface NavUserProps {
   user: UserData;
 }
 export function NavUser({ user }: NavUserProps) {
   const { isMobile } = useSidebar();
+  const navigate = useNavigate();
+  const clearSession = useSessionStore((state) => state.logout);
+
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent immediate navigation
+    try {
+      await logout(); // Wait for API call to complete (so interceptor gets the token)
+    } catch (error) {
+      console.error("Logout failed", error);
+    } finally {
+      // Always clear session and redirect, even if API fails
+      clearSession();
+      useSessionStore.persist.clearStorage();
+      navigate('/auth/login');
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -84,7 +103,7 @@ export function NavUser({ user }: NavUserProps) {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
-              <Link to="/auth/login" className="text-red-600">
+              <Link onClick={handleLogout} to="/auth/login" className="text-red-600">
                 <LogOut className="w-4 h-4 mr-2" />
                 Log out
               </Link>

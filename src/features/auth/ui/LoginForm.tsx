@@ -5,9 +5,9 @@ import { Input } from "@/shared/components/ui/input"
 import { Label } from "@/shared/components/ui/label"
 import avagit from "/avagit.jpg"
 import { useState } from "react"
-import { api } from "@/shared/api/api.shared"
 import { Link, useNavigate } from "react-router"
 import { useSessionStore } from "@/entities/session"
+import { login } from "../api/loginApi"
 
 export function LoginForm({
   className,
@@ -20,7 +20,7 @@ export function LoginForm({
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      const data = await api.auth.login({ username, password })
+      const data = await login(username, password)
       const accessToken = data.responseObject.accessToken;
       console.log("Access Token: ", accessToken)
       useSessionStore.getState().setAccessToken(accessToken);
@@ -37,7 +37,7 @@ export function LoginForm({
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
           <form
-            // onSubmit={handleLogin} 
+            onSubmit={handleLogin}
             className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
@@ -51,8 +51,8 @@ export function LoginForm({
                 <Input
                   id="username"
                   type="text"
-                  // value={username}
-                  // onChange={(e) => setUsername(e.target.value)}
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   placeholder="username_123"
                   required
                 />
@@ -68,7 +68,7 @@ export function LoginForm({
                   </a>
                 </div>
                 <Input id="password" type="password"
-                  // value={password} onChange={(e) => setPassword(e.target.value)} 
+                  value={password} onChange={(e) => setPassword(e.target.value)}
                   required />
               </div>
               <Button type="submit" className="w-full">
