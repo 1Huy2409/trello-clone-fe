@@ -12,6 +12,7 @@ import WorkspaceMembersPage from "../pages/workspace/ui/WorkspaceMembersPage"
 import BoardPage from "../pages/board/ui/BoardPage"
 import { ProtectedRoute } from "@/features/auth/ui/ProtectedRoute"
 import { PublicRoute } from "@/features/auth/ui/PublicRoute"
+import ProfilePage from "@/pages/profile/ui/ProfilePage"
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="workspace/:id" element={<WorkspacePage />} />
             <Route path="workspace/:id/settings" element={<WorkspaceSettingsPage />} />
             <Route path="workspace/:id/members" element={<WorkspaceMembersPage />} />

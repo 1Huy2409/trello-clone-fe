@@ -1,4 +1,4 @@
-import type { LoginSchema, RegisterSchema, VerifyOTPSchema, CreateWorkspace, UpdateWorkspace, CreateBoard, UpdateBoard, CreateList, ReorderList, CopyList, MoveList, UpdateList, AssignMember, UpdateCard, ReorderCard, CopyCard, MoveCard } from "../lib/types";
+import type { LoginSchema, RegisterSchema, VerifyOTPSchema, CreateWorkspace, UpdateWorkspace, CreateBoard, UpdateBoard, CreateList, ReorderList, CopyList, MoveList, UpdateList, AssignMember, UpdateCard, ReorderCard, CopyCard, MoveCard, UpdateProfileSchema } from "../lib/types";
 import type { CreateChecklist, UpdateChecklist } from "../types/checklist/type";
 import { API_ENDPOINT } from "./api-endpoint";
 import { FetchFactory, fetchFactory } from "./fetch-factory";
@@ -43,6 +43,23 @@ export const api = {
         },
         logout: async <T = any>(): Promise<ApiResponse<T>> => {
             const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.auth.logout, {}, { withCredentials: true });
+            return res.data;
+        }
+    },
+    user: {
+        getMe: async <T = any>(): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.user.getMe, { withCredentials: true });
+            return res.data;
+        },
+        updateProfile: async <T = any>(data: UpdateProfileSchema): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.user.updateProfile, data, { withCredentials: true });
+            return res.data;
+        },
+        uploadAvatar: async <T = any>(data: FormData): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.user.uploadAvatar, data, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" }
+            });
             return res.data;
         }
     },

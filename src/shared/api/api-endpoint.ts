@@ -7,6 +7,11 @@ export const API_ENDPOINT = {
         refreshToken: '/auth/processNewToken',
         logout: '/auth/logout',
     },
+    user: {
+        getMe: '/users/me',
+        updateProfile: '/users/profile',
+        uploadAvatar: '/users/avatar',
+    },
     workspace: {
         getAllWorkspaces: '/workspaces',
         getWorkspaceById: '/workspaces/:id',
