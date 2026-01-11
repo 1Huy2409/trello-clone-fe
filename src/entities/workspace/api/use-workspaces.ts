@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { workspaceKeys } from "./query-keys";
 import { api } from "@/shared/api";
-import type { CreateWorkspace, UpdateWorkspace, AddWorkspaceMember, Workspace, WorkspaceRole, WorkspaceMember } from "@/shared/types/workspace/type";
+import type { CreateWorkspace, UpdateWorkspace, AddWorkspaceMember, Workspace, WorkspaceRole, WorkspaceMember, PermissionDefinition, CreateWorkspaceRole, UpdateWorkspaceRole } from "@/shared/types/workspace/type";
 
 export const useWorkspaces = () => {
     return useQuery({
@@ -107,5 +107,67 @@ export const useWorkspaceRoles = (workspaceId: string) => {
             return response.responseObject;
         },
         enabled: !!workspaceId,
+    });
+};
+
+export const useAllPermissions = () => {
+    return useQuery({
+        queryKey: ['permissions'], // TODO: Add to query-keys if needed
+        queryFn: async () => {
+            const response = await api.permission.getAllPermissions<PermissionDefinition[]>();
+            return response.responseObject;
+        },
+    });
+};
+
+export const useCreateWorkspaceRole = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ workspaceId, data }: { workspaceId: string; data: CreateWorkspaceRole }) => {
+            const response = await api.workspace.createWorkspaceRole(workspaceId, data);
+            return response.responseObject;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: workspaceKeys.roles(variables.workspaceId) });
+        },
+    });
+};
+
+export const useUpdateWorkspaceRole = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ workspaceId, roleId, data }: { workspaceId: string; roleId: string; data: UpdateWorkspaceRole }) => {
+            const response = await api.workspace.updateWorkspaceRole(workspaceId, roleId, data);
+            return response.responseObject;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: workspaceKeys.roles(variables.workspaceId) });
+        },
+    });
+};
+
+export const useDeleteWorkspaceRole = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ workspaceId, roleId }: { workspaceId: string; roleId: string }) => {
+            const response = await api.workspace.deleteWorkspaceRole(workspaceId, roleId);
+            return response.responseObject;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: workspaceKeys.roles(variables.workspaceId) });
+        },
+    });
+};
+
+export const useArchiveWorkspace = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const response = await api.workspace.archiveWorkspace(id);
+            return response.responseObject;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+        },
     });
 };

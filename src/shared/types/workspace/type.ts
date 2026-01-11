@@ -1,8 +1,16 @@
+import type { Permission } from "../permission/type";
+
 export const WorkspaceStatus = {
     ACTIVE: 'active',
     ARCHIVED: 'archived',
 } as const;
 export type WorkspaceStatus = (typeof WorkspaceStatus)[keyof typeof WorkspaceStatus];
+export const RoleScope = {
+    GLOBAL: 'global',
+    WORKSPACE: 'workspace',
+    BOARD: 'board'
+} as const;
+export type RoleScope = (typeof RoleScope)[keyof typeof RoleScope];
 
 export interface Workspace {
     id: string;
@@ -53,12 +61,11 @@ export type WorkspacePermission = (typeof WorkspacePermission)[keyof typeof Work
 export interface WorkspaceRole {
     id: string;
     name: string;
+    scope: RoleScope;
     description: string;
-    permissions: string[];
+    isSystemRole: boolean;
+    permissions: Permission[];
     workspaceId: string;
-    isDefault: boolean;
-    createdAt: string;
-    updatedAt: string;
 }
 
 export interface PermissionDefinition {

@@ -13,6 +13,7 @@ import BoardPage from "../pages/board/ui/BoardPage"
 import { ProtectedRoute } from "@/features/auth/ui/ProtectedRoute"
 import { PublicRoute } from "@/features/auth/ui/PublicRoute"
 import ProfilePage from "@/pages/profile/ui/ProfilePage"
+import { Toaster } from "@/shared/components/ui/sonner"
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
+      <Toaster />
     </BrowserRouter>
   )
 }

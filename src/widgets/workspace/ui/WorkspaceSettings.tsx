@@ -2,10 +2,11 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Separator } from "@/shared/components/ui/separator";
 import type { Workspace, WorkspaceRole } from "@/shared/lib/types";
-import { WorkspacePermission } from "@/shared/types/workspace/type";
+
 import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash, Archive, Loader2 } from "lucide-react";
 import { useState } from "react";
 // import { useCommonStore } from "@/shared/stores/commonStore";
+import { toast } from "sonner";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,29 +14,35 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { RoleDialog } from "@/features/workspace/ui/RoleDialog";
-import { useUpdateWorkspace, useWorkspaceRoles } from "@/entities/workspace/api/use-workspaces";
+import {
+    useUpdateWorkspace,
+    useWorkspaceRoles,
+    useAllPermissions,
+    useCreateWorkspaceRole,
+    useUpdateWorkspaceRole,
+    useDeleteWorkspaceRole,
+    useArchiveWorkspace
+} from "@/entities/workspace/api/use-workspaces";
 // import { toast } from "sonner"; // Assuming sonner or use toast hook
 
 interface WorkspaceSettingsProps {
     workspace: Workspace;
 }
 
-// Temporary permissions mock until API is ready or use constants
-console.log("WorkspacePermission value:", WorkspacePermission); // Debug
-const MOCK_PERMISSIONS = WorkspacePermission ? Object.values(WorkspacePermission).map(p => ({
-    id: p,
-    action: p,
-    description: p.replace(/_/g, ' '),
-    isSystem: false
-})) : [];
+
 
 export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
-    // const { workspaceRoles, permissions } = useCommonStore();
     const [title, setTitle] = useState(workspace.title);
     const [description, setDescription] = useState(workspace.description || "");
 
     const { mutate: updateWorkspace, isPending: isUpdating } = useUpdateWorkspace();
     const { data: roles = [] } = useWorkspaceRoles(workspace.id);
+    const { data: permissions = [] } = useAllPermissions();
+
+    const { mutate: createRole } = useCreateWorkspaceRole();
+    const { mutate: updateRole } = useUpdateWorkspaceRole();
+    const { mutate: deleteRole } = useDeleteWorkspaceRole();
+    const { mutate: archiveWorkspace } = useArchiveWorkspace();
 
     // Role Management State
     const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
@@ -47,10 +54,10 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
             data: { title, description }
         }, {
             onSuccess: () => {
-                // console.log("Workspace updated");
+                toast.success("Workspace updated successfully");
             },
-            onError: (error) => {
-                console.error("Failed to update workspace", error);
+            onError: (error: any) => {
+                toast.error(error.message || "Failed to update workspace");
             }
         });
     };
@@ -61,31 +68,43 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
     };
 
     const handleCreatePermission = (action: string, description: string) => {
-        console.log("Create Permission:", {
+        console.log("Create Permission (Not Implemented on Backend):", {
             action: action.toUpperCase().replace(/\s+/g, '_'),
             description: description,
-            isSystem: false
         });
-        // In a real app, you would call an action here
+        // This feature seems to be for creating a permission definition which might not be supported dynamically
     };
 
     const handleSaveRole = (roleData: any) => {
-        console.log("Save Role:", {
-            ...roleData,
-            workspaceId: workspace.id
-        });
-        // TODO: Implement create/update role mutation
+        if (editingRole) {
+            updateRole({
+                workspaceId: workspace.id,
+                roleId: editingRole.id,
+                data: {
+                    name: roleData.name,
+                    description: roleData.description,
+                    permissions: roleData.permissions
+                }
+            });
+        } else {
+            createRole({
+                workspaceId: workspace.id,
+                data: {
+                    name: roleData.name,
+                    description: roleData.description,
+                    permissions: roleData.permissions
+                }
+            });
+        }
         setIsRoleDialogOpen(false);
     };
 
     const handleDeleteRole = (roleId: string) => {
-        console.log("Delete Role:", roleId);
-        // TODO: Implement delete role mutation
+        deleteRole({ workspaceId: workspace.id, roleId });
     };
 
     const handleArchive = () => {
-        console.log("Archive Workspace option clicked");
-        // TODO: Implement archive workspace mutation
+        archiveWorkspace(workspace.id);
     };
 
     return (
@@ -167,15 +186,15 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                                 <div>
                                     <h4 className="font-medium flex items-center gap-2">
                                         {role.name}
-                                        {role.isDefault && (
-                                            <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded font-normal text-secondary-foreground">Default</span>
+                                        {role.isSystemRole && (
+                                            <span className="text-[10px] bg-secondary px-1.5 py-0.5 rounded font-normal text-secondary-foreground">System</span>
                                         )}
                                     </h4>
                                     <p className="text-sm text-muted-foreground mb-1">{role.description}</p>
                                     <div className="flex flex-wrap gap-1">
                                         {role.permissions.map((p) => (
-                                            <span key={p} className="text-[10px] border px-1.5 py-0.5 rounded text-muted-foreground bg-background">
-                                                {p.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                                            <span key={p.id} className="text-[10px] border px-1.5 py-0.5 rounded text-muted-foreground bg-background" title={p.description}>
+                                                {p.action}
                                             </span>
                                         ))}
                                     </div>
@@ -192,7 +211,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                                         <Pencil className="w-4 h-4 mr-2" />
                                         Edit Role
                                     </DropdownMenuItem>
-                                    {!role.isDefault && (
+                                    {!role.isSystemRole && (
                                         <DropdownMenuItem
                                             className="text-destructive focus:text-destructive"
                                             onClick={() => handleDeleteRole(role.id)}
@@ -217,7 +236,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                 open={isRoleDialogOpen}
                 onOpenChange={setIsRoleDialogOpen}
                 role={editingRole}
-                permissions={MOCK_PERMISSIONS} // Use mock permissions
+                permissions={permissions}
                 onSave={handleSaveRole}
                 onCreatePermission={handleCreatePermission}
             />

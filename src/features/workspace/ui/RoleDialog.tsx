@@ -37,7 +37,7 @@ export function RoleDialog({ open, onOpenChange, role, permissions, onSave, onCr
         if (role) {
             setRoleName(role.name);
             setRoleDescription(role.description);
-            setSelectedPermissions(role.permissions);
+            setSelectedPermissions(role.permissions.map(p => p.action));
         } else {
             setRoleName("");
             setRoleDescription("");

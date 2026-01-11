@@ -69,5 +69,8 @@ export const API_ENDPOINT = {
         copy: '/cards/copy',
         move: '/cards/move',
     },
+    permission: {
+        getAllPermissions: '/permissions',
+    }
 
 } as const;

@@ -1,5 +1,6 @@
 import type { LoginSchema, RegisterSchema, VerifyOTPSchema, CreateWorkspace, UpdateWorkspace, CreateBoard, UpdateBoard, CreateList, ReorderList, CopyList, MoveList, UpdateList, AssignMember, UpdateCard, ReorderCard, CopyCard, MoveCard, UpdateProfileSchema, ChangePasswordSchema, AddWorkspaceMember } from "../lib/types";
 import type { CreateChecklist } from "../types/checklist/type";
+import type { CreateWorkspaceRole, UpdateWorkspaceRole } from "../types/workspace/type";
 import { API_ENDPOINT } from "./api-endpoint";
 import { FetchFactory, fetchFactory } from "./fetch-factory";
 
@@ -83,7 +84,7 @@ export const api = {
         },
         updateWorkspace: async <T = any>(id: string, data: UpdateWorkspace): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.updateWorkspace.replace(':id', id);
-            const res = await axiosInstance.put<ApiResponse<T>>(url, data, { withCredentials: true });
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
         deleteWorkspace: async <T = any>(id: string): Promise<ApiResponse<T>> => {
@@ -121,14 +122,14 @@ export const api = {
             const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        createWorkspaceRole: async <T = any>(workspaceId: string): Promise<ApiResponse<T>> => {
+        createWorkspaceRole: async <T = any>(workspaceId: string, data: CreateWorkspaceRole): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.createWorkspaceRole.replace(':id', workspaceId);
-            const res = await axiosInstance.post<ApiResponse<T>>(url, {}, { withCredentials: true });
+            const res = await axiosInstance.post<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        updateWorkspaceRole: async <T = any>(workspaceId: string, roleId: string): Promise<ApiResponse<T>> => {
+        updateWorkspaceRole: async <T = any>(workspaceId: string, roleId: string, data: UpdateWorkspaceRole): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.updateWorkspaceRole.replace(':id', workspaceId).replace(':roleId', roleId);
-            const res = await axiosInstance.put<ApiResponse<T>>(url, {}, { withCredentials: true });
+            const res = await axiosInstance.put<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
         deleteWorkspaceRole: async <T = any>(workspaceId: string, roleId: string): Promise<ApiResponse<T>> => {
@@ -285,6 +286,11 @@ export const api = {
             const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.card.move, data, { withCredentials: true });
             return res.data;
         },
-
+    },
+    permission: {
+        getAllPermissions: async <T = any>(): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.permission.getAllPermissions, { withCredentials: true });
+            return res.data;
+        }
     }
 }

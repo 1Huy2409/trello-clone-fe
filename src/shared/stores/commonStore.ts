@@ -11,7 +11,6 @@ interface CommonStore {
     lists: List[];
     cards: Card[];
     cardMembers: CardMember[];
-    workspaceRoles: WorkspaceRole[];
     permissions: PermissionDefinition[];
     addList: (boardId: string, title: string) => void;
 }
@@ -25,52 +24,6 @@ export const mockPermissions: PermissionDefinition[] = [
     { id: 'p-4', action: WorkspacePermission.CREATE_BOARD, description: 'Create new boards', isSystem: true },
     { id: 'p-5', action: WorkspacePermission.MANAGE_BOARD, description: 'Manage board settings', isSystem: true },
 ];
-
-export const mockWorkspaceRoles: WorkspaceRole[] = [
-    {
-        id: 'wr-1',
-        name: 'Admin',
-        description: 'Full access to workspace settings and members',
-        permissions: [WorkspacePermission.MANAGE_WORKSPACE, WorkspacePermission.MANAGE_MEMBERS, WorkspacePermission.MANAGE_ROLES, WorkspacePermission.CREATE_BOARD, WorkspacePermission.MANAGE_BOARD],
-        workspaceId: 'ws-1',
-        isDefault: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    },
-    {
-        id: 'wr-2',
-        name: 'Member',
-        description: 'Can create boards and Invite members',
-        permissions: [WorkspacePermission.CREATE_BOARD, WorkspacePermission.MANAGE_BOARD],
-        workspaceId: 'ws-1',
-        isDefault: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    },
-    // Add same roles for other workspaces for testing
-    {
-        id: 'wr-3',
-        name: 'Admin',
-        description: 'Full access',
-        permissions: Object.values(WorkspacePermission),
-        workspaceId: 'ws-2',
-        isDefault: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    },
-    {
-        id: 'wr-4',
-        name: 'Member',
-        description: 'Standard access',
-        permissions: [WorkspacePermission.CREATE_BOARD],
-        workspaceId: 'ws-2',
-        isDefault: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    }
-];
-
-
 const mockWorkspaces: Workspace[] = [
     {
         id: 'ws-1',
@@ -309,7 +262,6 @@ export const useCommonStore = create<CommonStore>((set) => ({
     lists: mockLists,
     cards: mockCards,
     cardMembers: mockCardMembers,
-    workspaceRoles: mockWorkspaceRoles,
     permissions: mockPermissions,
 
     addList: (boardId: string, title: string) => set((state) => {
