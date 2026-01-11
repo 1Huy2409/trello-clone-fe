@@ -2,9 +2,10 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Separator } from "@/shared/components/ui/separator";
 import type { Workspace, WorkspaceRole } from "@/shared/lib/types";
-import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash, Archive } from "lucide-react";
+import { WorkspacePermission } from "@/shared/types/workspace/type";
+import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash, Archive, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useCommonStore } from "@/shared/stores/commonStore";
+// import { useCommonStore } from "@/shared/stores/commonStore";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,30 +13,46 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { RoleDialog } from "@/features/workspace/ui/RoleDialog";
+import { useUpdateWorkspace, useWorkspaceRoles } from "@/entities/workspace/api/use-workspaces";
+// import { toast } from "sonner"; // Assuming sonner or use toast hook
 
 interface WorkspaceSettingsProps {
     workspace: Workspace;
 }
 
+// Temporary permissions mock until API is ready or use constants
+console.log("WorkspacePermission value:", WorkspacePermission); // Debug
+const MOCK_PERMISSIONS = WorkspacePermission ? Object.values(WorkspacePermission).map(p => ({
+    id: p,
+    action: p,
+    description: p.replace(/_/g, ' '),
+    isSystem: false
+})) : [];
+
 export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
-    const { workspaceRoles, permissions } = useCommonStore();
+    // const { workspaceRoles, permissions } = useCommonStore();
     const [title, setTitle] = useState(workspace.title);
     const [description, setDescription] = useState(workspace.description || "");
-    const [isLoading, setIsLoading] = useState(false);
+
+    const { mutate: updateWorkspace, isPending: isUpdating } = useUpdateWorkspace();
+    const { data: roles = [] } = useWorkspaceRoles(workspace.id);
 
     // Role Management State
     const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
     const [editingRole, setEditingRole] = useState<WorkspaceRole | null>(null);
 
-    const allWorkspaceRoles = workspaceRoles.filter(r => r.workspaceId === workspace.id);
-
     const handleSave = () => {
-        setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-            console.log("Saved workspace settings:", { title, description });
-        }, 1000);
+        updateWorkspace({
+            id: workspace.id,
+            data: { title, description }
+        }, {
+            onSuccess: () => {
+                // console.log("Workspace updated");
+            },
+            onError: (error) => {
+                console.error("Failed to update workspace", error);
+            }
+        });
     };
 
     const handleOpenRoleDialog = (role?: WorkspaceRole) => {
@@ -57,15 +74,18 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
             ...roleData,
             workspaceId: workspace.id
         });
+        // TODO: Implement create/update role mutation
         setIsRoleDialogOpen(false);
     };
 
     const handleDeleteRole = (roleId: string) => {
         console.log("Delete Role:", roleId);
+        // TODO: Implement delete role mutation
     };
 
     const handleArchive = () => {
         console.log("Archive Workspace option clicked");
+        // TODO: Implement archive workspace mutation
     };
 
     return (
@@ -90,6 +110,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         className="max-w-md"
+                        disabled={isUpdating}
                     />
                     <p className="text-xs text-muted-foreground">
                         This is the name of your company, team, or organization.
@@ -105,15 +126,16 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 max-w-md"
+                        disabled={isUpdating}
                     />
                     <p className="text-xs text-muted-foreground">
                         Get your members on board with a few words about your Workspace.
                     </p>
                 </div>
 
-                <Button onClick={handleSave} disabled={isLoading}>
-                    {isLoading && <span className="mr-2 animate-spin">⏳</span>}
-                    <Save className="w-4 h-4 mr-2" />
+                <Button onClick={handleSave} disabled={isUpdating}>
+                    {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {!isUpdating && <Save className="w-4 h-4 mr-2" />}
                     Save Changes
                 </Button>
             </div>
@@ -136,7 +158,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                 </div>
 
                 <div className="border rounded-lg divide-y">
-                    {allWorkspaceRoles.map((role) => (
+                    {roles.map((role) => (
                         <div key={role.id} className="p-4 flex items-center justify-between hover:bg-muted/50 transition-colors">
                             <div className="flex items-start gap-3">
                                 <div className="mt-1 bg-primary/10 p-2 rounded-full">
@@ -183,7 +205,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                             </DropdownMenu>
                         </div>
                     ))}
-                    {allWorkspaceRoles.length === 0 && (
+                    {roles.length === 0 && (
                         <div className="p-8 text-center text-muted-foreground">
                             No custom roles defined.
                         </div>
@@ -195,7 +217,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                 open={isRoleDialogOpen}
                 onOpenChange={setIsRoleDialogOpen}
                 role={editingRole}
-                permissions={permissions}
+                permissions={MOCK_PERMISSIONS} // Use mock permissions
                 onSave={handleSaveRole}
                 onCreatePermission={handleCreatePermission}
             />

@@ -22,6 +22,7 @@ export const API_ENDPOINT = {
         archiveWorkspace: '/workspaces/:id/archive',
         reopenWorkspace: '/workspaces/:id/reopen',
         getWorkspaceMembers: '/workspaces/:id/members',
+        addWorkspaceMember: '/workspaces/:id/members',
         deleteWorkspaceMember: '/workspaces/:id/members/:userId',
         getWorkspaceRoles: '/workspaces/:id/roles',
         createWorkspaceRole: '/workspaces/:id/roles',
@@ -32,6 +33,7 @@ export const API_ENDPOINT = {
     board: {
         getBoardsByWorkspaceId: '/workspaces/:id/boards',
         createBoardFromWorkspace: '/workspaces/:id/boards',
+        getBoardById: '/boards/:boardId',
         updateBoard: '/boards/:boardId',
         deleteBoard: '/boards/:boardId',
         reopenBoard: '/boards/:id/reopen',

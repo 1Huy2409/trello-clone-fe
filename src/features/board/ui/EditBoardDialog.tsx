@@ -11,6 +11,8 @@ import {
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
 import type { Board } from '@/shared/lib/types';
+import { useUpdateBoard } from "@/entities/board/api/use-boards";
+import { Loader2 } from "lucide-react";
 
 
 interface EditBoardDialogProps {
@@ -32,16 +34,23 @@ export function EditBoardDialog({ board, open, onOpenChange }: EditBoardDialogPr
         }
     }, [open, board]);
 
+    const { mutate: updateBoard, isPending: isUpdating } = useUpdateBoard();
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        // if (!title.trim() || !board) return;
+        if (!title.trim() || !board) return;
 
-        // updateBoard(board.id, {
-        //     title: title.trim(),
-        //     description: description.trim(),
-        // });
-        console.log('Submit edit board!')
-        onOpenChange && onOpenChange(false);
+        updateBoard({
+            id: board.id,
+            data: {
+                title: title.trim(),
+                description: description.trim(),
+            }
+        }, {
+            onSuccess: () => {
+                onOpenChange && onOpenChange(false);
+            }
+        });
     };
 
     const handleCancel = () => {
@@ -89,7 +98,8 @@ export function EditBoardDialog({ board, open, onOpenChange }: EditBoardDialogPr
                         <Button type="button" variant="outline" onClick={handleCancel}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={!title.trim()}>
+                        <Button type="submit" disabled={!title.trim() || isUpdating}>
+                            {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Save Changes
                         </Button>
                     </DialogFooter>

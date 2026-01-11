@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useWorkspaces } from "@/entities/workspace/api/use-workspaces";
-import { useBoardsByWorkspace, useBoardById } from "@/entities/board/api/use-boards";
+import { useBoardsByWorkspace, useBoardById, useDeleteBoard } from "@/entities/board/api/use-boards";
 import type { Workspace, Board } from "@/shared/lib/types";
 import { PageLoader } from "@/shared/components/ui/page-loader";
 
@@ -141,8 +141,12 @@ function DashboardWorkspaceItem({
 }) {
     const { data: boards = [] } = useBoardsByWorkspace(workspace.id);
 
+    const { mutate: deleteBoard } = useDeleteBoard();
+
     const handleDeleteBoard = (boardId: string) => {
-        alert('Delete board with ID: ' + boardId);
+        if (confirm("Are you sure you want to delete this board?")) {
+            deleteBoard(boardId);
+        }
     }
 
     return (
