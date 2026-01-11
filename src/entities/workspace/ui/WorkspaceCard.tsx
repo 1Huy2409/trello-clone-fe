@@ -45,25 +45,25 @@ export function WorkspaceCard({
             </div>
 
             {boardCount === 0 ? (
-                <Card className="border-dashed">
-                    <CardContent className="flex flex-col items-center justify-center py-8">
-                        <Kanban className="h-8 w-8 text-muted-foreground mb-2" />
-                        <h4 className="text-sm font-medium mb-1">
-                            No boards in this workspace
-                        </h4>
-                        <p className="text-xs text-muted-foreground text-center mb-3">
-                            Create your first board to start organizing your
-                            projects
-                        </p>
-                        <Button
-                            size="sm"
-                            onClick={onCreateBoard}
-                        >
-                            <Plus className="mr-2 h-3 w-3" />
-                            Create Board
-                        </Button>
-                    </CardContent>
-                </Card>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                    <Card className="border-dashed h-auto w-60">
+                        <CardContent className="flex flex-col items-center justify-center py-6">
+                            <Kanban className="h-6 w-6 text-muted-foreground mb-2" />
+                            <h4 className="text-sm font-medium mb-1">
+                                No boards
+                            </h4>
+                            <Button
+                                size="sm"
+                                variant="secondary"
+                                onClick={onCreateBoard}
+                                className="mt-2 h-8 text-xs"
+                            >
+                                <Plus className="mr-1.5 h-3 w-3" />
+                                Create Board
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </div>
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {children}

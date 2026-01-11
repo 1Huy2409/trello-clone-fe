@@ -72,74 +72,95 @@ export const api = {
             const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.workspace.getAllWorkspaces, { withCredentials: true });
             return res.data;
         },
+        getWorkspaceById: async <T = any>(id: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.getWorkspaceById.replace(':id', id);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
+            return res.data;
+        },
         createWorkspace: async <T = any>(data: CreateWorkspace): Promise<ApiResponse<T>> => {
             const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.workspace.createWorkspace, data, { withCredentials: true });
             return res.data;
         },
-        updateWorkspace: async <T = any>(data: UpdateWorkspace): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.put<ApiResponse<T>>(API_ENDPOINT.workspace.updateWorkspace, data, { withCredentials: true });
+        updateWorkspace: async <T = any>(id: string, data: UpdateWorkspace): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.updateWorkspace.replace(':id', id);
+            const res = await axiosInstance.put<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        deleteWorkspace: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.workspace.deleteWorkspace, { withCredentials: true });
+        deleteWorkspace: async <T = any>(id: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.deleteWorkspace.replace(':id', id);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        archiveWorkspace: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.workspace.archiveWorkspace, { withCredentials: true });
+        archiveWorkspace: async <T = any>(id: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.archiveWorkspace.replace(':id', id);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        reopenWorkspace: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.workspace.reopenWorkspace, { withCredentials: true });
+        reopenWorkspace: async <T = any>(id: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.reopenWorkspace.replace(':id', id);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        getWorkspaceMembers: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.workspace.getWorkspaceMembers, { withCredentials: true });
+        getWorkspaceMembers: async <T = any>(workspaceId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.getWorkspaceMembers.replace(':id', workspaceId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        deleteWorkspaceMember: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.workspace.deleteWorkspaceMember, { withCredentials: true });
+        deleteWorkspaceMember: async <T = any>(workspaceId: string, userId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.deleteWorkspaceMember.replace(':id', workspaceId).replace(':userId', userId);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        getWorkspaceRoles: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.workspace.getWorkspaceRoles, { withCredentials: true });
+        getWorkspaceRoles: async <T = any>(workspaceId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.getWorkspaceRoles.replace(':id', workspaceId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        createWorkspaceRole: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.workspace.createWorkspaceRole, { withCredentials: true });
+        createWorkspaceRole: async <T = any>(workspaceId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.createWorkspaceRole.replace(':id', workspaceId);
+            const res = await axiosInstance.post<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
-        updateWorkspaceRole: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.put<ApiResponse<T>>(API_ENDPOINT.workspace.updateWorkspaceRole, { withCredentials: true });
+        updateWorkspaceRole: async <T = any>(workspaceId: string, roleId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.updateWorkspaceRole.replace(':id', workspaceId).replace(':roleId', roleId);
+            const res = await axiosInstance.put<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
-        deleteWorkspaceRole: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.workspace.deleteWorkspaceRole, { withCredentials: true });
+        deleteWorkspaceRole: async <T = any>(workspaceId: string, roleId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.deleteWorkspaceRole.replace(':id', workspaceId).replace(':roleId', roleId);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        updateMemberRole: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.put<ApiResponse<T>>(API_ENDPOINT.workspace.updateMemberRole, { withCredentials: true });
+        updateMemberRole: async <T = any>(workspaceId: string, userId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.workspace.updateMemberRole.replace(':id', workspaceId).replace(':userId', userId);
+            const res = await axiosInstance.put<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
     },
     board: {
-        getBoardsByWorkspaceId: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.board.getBoardsByWorkspaceId, { withCredentials: true });
+        getBoardsByWorkspaceId: async <T = any>(workspaceId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.getBoardsByWorkspaceId.replace(':id', workspaceId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        createBoardFromWorkspace: async <T = any>(data: CreateBoard): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.board.createBoardFromWorkspace, data, { withCredentials: true });
+        createBoardFromWorkspace: async <T = any>(workspaceId: string, data: CreateBoard): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.createBoardFromWorkspace.replace(':id', workspaceId);
+            const res = await axiosInstance.post<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        updateBoard: async <T = any>(data: UpdateBoard): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.put<ApiResponse<T>>(API_ENDPOINT.board.updateBoard, data, { withCredentials: true });
+        updateBoard: async <T = any>(boardId: string, data: UpdateBoard): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.updateBoard.replace(':boardId', boardId);
+            const res = await axiosInstance.put<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        deleteBoard: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.board.deleteBoard, { withCredentials: true });
+        deleteBoard: async <T = any>(boardId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.deleteBoard.replace(':boardId', boardId);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
-        reopenBoard: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.board.reopenBoard, { withCredentials: true });
+        reopenBoard: async <T = any>(id: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.reopenBoard.replace(':id', id);
+            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
         joinBoardByLink: async <T = any>(): Promise<ApiResponse<T>> => {

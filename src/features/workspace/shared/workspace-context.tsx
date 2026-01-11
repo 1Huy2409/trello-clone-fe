@@ -1,22 +1,20 @@
 import { useMemo, useState } from "react";
 import type { SortOption, ViewMode } from "./types";
-import { useParams } from "react-router";
-import { useCommonStore } from "@/shared/stores/commonStore";
 import { WorkspaceContext, WorkspaceDisplayContext } from "./context";
+import type { Board } from "@/shared/lib/types";
 
-export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
+interface WorkspaceProviderProps {
+    children: React.ReactNode;
+    boards: Board[];
+}
+
+export function WorkspaceProvider({ children, boards }: WorkspaceProviderProps) {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortBy, setSortBy] = useState<SortOption>("recent");
     const [viewMode, setViewMode] = useState<ViewMode>("grid");
 
-    const { id } = useParams<{ id: string }>();
-    const { boards } = useCommonStore();
-
-    const workspaceBoards = boards.filter(
-        (board) => board.workspaceId === id
-    );
     const filteredAndSortedBoards = useMemo(() => {
-        const filtered = workspaceBoards.filter(
+        const filtered = boards.filter(
             (board) =>
                 board.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                 board.description
@@ -44,7 +42,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
             default:
                 return filtered;
         }
-    }, [workspaceBoards, searchQuery, sortBy]);
+    }, [boards, searchQuery, sortBy]);
+
     const state = useMemo(() => ({
         searchQuery,
         sortBy,

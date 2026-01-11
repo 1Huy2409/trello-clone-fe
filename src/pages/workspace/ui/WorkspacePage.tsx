@@ -1,7 +1,8 @@
 import { useParams } from "react-router";
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useWorkspace, useWorkspaceBoards } from "@/entities/workspace/api/use-workspaces";
 import { WorkspaceProvider } from "@/features/workspace/shared/workspace-context";
 import { useState } from "react";
+import type { Board } from "@/shared/lib/types";
 // Widgets & Features
 import { WorkspaceBoardList } from "@/widgets/workspace/ui/WorkspaceBoardList";
 import SearchInput from "@/features/workspace/ui/SearchInput";
@@ -9,20 +10,23 @@ import { CreateBoardDialog } from "@/features/board/ui/CreateBoardDialog";
 import { EditBoardDialog } from "@/features/board/ui/EditBoardDialog";
 // Context
 import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
+import { PageLoader } from "@/shared/components/ui/page-loader";
 
 export default function WorkspacePage() {
     const { id } = useParams<{ id: string }>();
-    const { boards, workspaces } = useCommonStore();
+    const { data: currentWorkspace, isLoading: isLoadingWorkspace } = useWorkspace(id);
+    const { data: workspaceBoards = [], isLoading: isLoadingBoards } = useWorkspaceBoards(id);
+
     const [isCreateBoardOpen, setIsCreateBoardOpen] = useState(false);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
 
     const selectedBoard =
-        boards.find((board) => board.id === selectedBoardId) || null;
+        workspaceBoards.find((board: Board) => board.id === selectedBoardId) || null;
 
-
-    const currentWorkspace = Object.values(workspaces).find((workspace) => workspace.id === id);
-    const workspaceBoards = boards.filter((board) => board.workspaceId === id);
+    if (isLoadingWorkspace || isLoadingBoards) {
+        return <PageLoader />;
+    }
 
     if (!currentWorkspace) {
         return (
@@ -39,7 +43,7 @@ export default function WorkspacePage() {
         );
     }
     return (
-        <WorkspaceProvider>
+        <WorkspaceProvider boards={workspaceBoards}>
             <div className="flex-1 space-y-6 p-8 pt-6">
                 {/* Header */}
                 <div className="space-y-2">
@@ -69,7 +73,7 @@ export default function WorkspacePage() {
                 <CreateBoardDialog
                     open={isCreateBoardOpen}
                     onOpenChange={setIsCreateBoardOpen}
-                    workspaceId={id}
+                    workspaceId={id!}
                 />
             </div>
         </WorkspaceProvider>

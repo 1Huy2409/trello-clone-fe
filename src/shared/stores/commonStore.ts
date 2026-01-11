@@ -11,7 +11,6 @@ interface CommonStore {
     lists: List[];
     cards: Card[];
     cardMembers: CardMember[];
-    currentUser: User | null;
     workspaceRoles: WorkspaceRole[];
     permissions: PermissionDefinition[];
     addList: (boardId: string, title: string) => void;
@@ -71,14 +70,6 @@ export const mockWorkspaceRoles: WorkspaceRole[] = [
     }
 ];
 
-export const mockUser: User = {
-    id: '1',
-    email: 'hath@example.com',
-    fullname: 'Huy Nguyen',
-    avatarUrl: 'https://github.com/shadcn.png',
-    description: 'Fullstack Developer',
-    isActive: true,
-};
 
 const mockWorkspaces: Workspace[] = [
     {
@@ -311,7 +302,6 @@ const mockCards: Card[] = [
 ];
 
 export const useCommonStore = create<CommonStore>((set) => ({
-    currentUser: mockUser,
     workspaces: mockWorkspaces,
     boards: mockBoards,
     workspaceMembers: mockWorkspaceMembers,

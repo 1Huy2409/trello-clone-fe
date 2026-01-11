@@ -4,7 +4,7 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/shared/components/ui/sidebar"
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useWorkspaces } from "@/entities/workspace/api/use-workspaces";
 import { useSessionStore } from "@/entities/session";
 import {
   Layout,
@@ -15,7 +15,7 @@ import { NavMain } from "./nav-main";
 import { NavWorkspaces } from "./nav-workspaces";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { workspaces } = useCommonStore()
+  const { data: workspaces = [] } = useWorkspaces();
   const user = useSessionStore((state) => state.user)
 
   const navMain = [
@@ -36,7 +36,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     email: 'guest@example.com',
     avatar: 'https://github.com/shadcn.png'
   }
-  const allWorkspaces = Object.values(workspaces)
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -49,7 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />
-        <NavWorkspaces workspaces={allWorkspaces} />
+        <NavWorkspaces workspaces={workspaces} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={userData} />

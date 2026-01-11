@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useWorkspaces } from "@/entities/workspace/api/use-workspaces";
+import { useBoardsByWorkspace, useBoardById } from "@/entities/board/api/use-boards";
+import type { Workspace, Board } from "@/shared/lib/types";
+import { PageLoader } from "@/shared/components/ui/page-loader";
 
 // Entities
 import { WorkspaceCard } from "@/entities/workspace/ui/WorkspaceCard";
@@ -12,7 +15,7 @@ import { CreateBoardDialog } from "@/features/board/ui/CreateBoardDialog";
 import { CreateWorkspaceDialog } from "@/features/workspace/ui/CreateWorkspaceDialog";
 import { EditBoardDialog } from "@/features/board/ui/EditBoardDialog";
 
-// Shared Context (keeping this as is for now, though it should probably be prop drilled or local state in widget)
+// Shared Context
 import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
 import {
     DropdownMenu,
@@ -30,16 +33,10 @@ export function DashboardContent() {
     const [selectedWorkspaceForBoard, setSelectedWorkspaceForBoard] = useState<string | null>(null);
     const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
 
-    const { boards, workspaces } = useCommonStore();
-    const allWorkspaces = Object.values(workspaces);
+    const { data: workspaces = [], isLoading: isLoadingWorkspaces } = useWorkspaces();
 
-    const getWorkspaceBoards = (workspaceId: string) =>
-        boards.filter((board) => board.workspaceId === workspaceId);
-
-    const selectedBoard = boards.find((board) => board.id === selectedBoardId) || null;
-
-    const handleDeleteBoard = (boardId: string) => {
-        alert('Delete board with ID: ' + boardId);
+    if (isLoadingWorkspaces) {
+        return <PageLoader />;
     }
 
     return (
@@ -57,7 +54,7 @@ export function DashboardContent() {
                 </div>
             </div>
 
-            {allWorkspaces.length === 0 ? (
+            {workspaces.length === 0 ? (
                 <div className="flex flex-col items-center justify-center space-y-4 py-12">
                     <div className="text-center space-y-2">
                         <h3 className="text-xl font-semibold">No workspaces yet</h3>
@@ -73,85 +70,31 @@ export function DashboardContent() {
                     {/* Context Providers currently needed for BoardCard actions which are injected below */}
                     <SetIsEditDialogOpenContext.Provider value={setIsEditDialogOpen}>
                         <SetSelectedBoardIdContext.Provider value={setSelectedBoardId}>
-                            {allWorkspaces.map((workspace) => {
-                                const workspaceBoards = getWorkspaceBoards(workspace.id);
-
-                                return (
-                                    <WorkspaceCard
-                                        key={workspace.id}
-                                        workspace={workspace}
-                                        boardCount={workspaceBoards.length}
-                                        onCreateBoard={() => {
-                                            setSelectedWorkspaceForBoard(workspace.id);
-                                            setIsCreateBoardOpen(true);
-                                        }}
-                                        action={
-                                            <Button
-                                                variant="outline"
-                                                onClick={() => {
-                                                    setSelectedWorkspaceForBoard(workspace.id);
-                                                    setIsCreateBoardOpen(true);
-                                                }}
-                                            >
-                                                <Plus className="mr-2 h-4 w-4" />
-                                                Add Board
-                                            </Button>
-                                        }
-                                    >
-                                        {workspaceBoards.map((board) => (
-                                            <BoardCard
-                                                key={board.id}
-                                                board={board}
-                                                actions={
-                                                    <DropdownMenu>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button
-                                                                variant="ghost"
-                                                                size="sm"
-                                                                className="h-8 w-8 p-0"
-                                                            >
-                                                                <MoreHorizontal className="h-4 w-4" />
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end">
-                                                            <DropdownMenuItem
-                                                                onClick={(e) => {
-                                                                    e.preventDefault(); // Prevent navigation
-                                                                    setSelectedBoardId(board.id);
-                                                                    setIsEditDialogOpen(true);
-                                                                }}
-                                                            >
-                                                                <Edit className="w-4 h-4 mr-2" />
-                                                                Edit Board
-                                                            </DropdownMenuItem>
-                                                            <DropdownMenuItem
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    handleDeleteBoard(board.id);
-                                                                }}
-                                                                className="text-destructive focus:text-destructive"
-                                                            >
-                                                                <Trash className="w-4 h-4 mr-2" />
-                                                                Delete Board
-                                                            </DropdownMenuItem>
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
-                                                }
-                                            />
-                                        ))}
-                                    </WorkspaceCard>
-                                );
-                            })}
+                            {workspaces.map((workspace: Workspace) => (
+                                <DashboardWorkspaceItem
+                                    key={workspace.id}
+                                    workspace={workspace}
+                                    onAddBoard={() => {
+                                        setSelectedWorkspaceForBoard(workspace.id);
+                                        setIsCreateBoardOpen(true);
+                                    }}
+                                    setSelectedBoardId={setSelectedBoardId}
+                                    setIsEditDialogOpen={setIsEditDialogOpen}
+                                />
+                            ))}
                         </SetSelectedBoardIdContext.Provider>
                     </SetIsEditDialogOpenContext.Provider>
                 </div>
             )}
 
-            <EditBoardDialog
-                board={selectedBoard}
-                open={isEditDialogOpen}
-                onOpenChange={setIsEditDialogOpen}
-            />
+            {/* Dialogs */}
+            {selectedBoardId && (
+                <EditBoardContainer
+                    boardId={selectedBoardId}
+                    open={isEditDialogOpen}
+                    onOpenChange={setIsEditDialogOpen}
+                />
+            )}
 
             <CreateBoardDialog
                 open={isCreateBoardOpen}
@@ -167,5 +110,92 @@ export function DashboardContent() {
                 onOpenChange={setIsCreateWorkspaceOpen}
             />
         </div>
+    );
+}
+
+function EditBoardContainer({ boardId, open, onOpenChange }: { boardId: string, open: boolean, onOpenChange: (open: boolean) => void }) {
+    const { data: board } = useBoardById(boardId);
+
+    if (!board) return null; // Or loader
+
+    return (
+        <EditBoardDialog
+            board={board}
+            open={open}
+            onOpenChange={onOpenChange}
+        />
+    );
+}
+
+// Sub-component to handle per-workspace data fetching
+function DashboardWorkspaceItem({
+    workspace,
+    onAddBoard,
+    setSelectedBoardId,
+    setIsEditDialogOpen
+}: {
+    workspace: Workspace;
+    onAddBoard: () => void;
+    setSelectedBoardId: (id: string) => void;
+    setIsEditDialogOpen: (open: boolean) => void;
+}) {
+    const { data: boards = [] } = useBoardsByWorkspace(workspace.id);
+
+    const handleDeleteBoard = (boardId: string) => {
+        alert('Delete board with ID: ' + boardId);
+    }
+
+    return (
+        <WorkspaceCard
+            workspace={workspace}
+            boardCount={boards.length}
+            onCreateBoard={onAddBoard}
+            action={
+                boards.length > 0 ? (
+                    <Button variant="outline" onClick={onAddBoard}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Board
+                    </Button>
+                ) : null
+            }
+        >
+            {boards.map((board: Board) => (
+                <BoardCard
+                    key={board.id}
+                    board={board}
+                    actions={
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setSelectedBoardId(board.id);
+                                        setIsEditDialogOpen(true);
+                                    }}
+                                >
+                                    <Edit className="w-4 h-4 mr-2" />
+                                    Edit Board
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleDeleteBoard(board.id);
+                                    }}
+                                    className="text-destructive focus:text-destructive"
+                                >
+                                    <Trash className="w-4 h-4 mr-2" />
+                                    Delete Board
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    }
+                />
+            ))}
+        </WorkspaceCard>
     );
 }
