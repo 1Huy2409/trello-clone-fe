@@ -92,7 +92,7 @@ export const setupAuthInterceptor = (instance: AxiosInstance) => {
                     isRefreshing = false;
 
                     useSessionStore.getState().logout();
-                    window.location.href = '/#/auth/login'; // Adjust redirect as needed
+                    // window.location.href = '/#/auth/login'; // internal routing handles this via store subscription
 
                     return Promise.reject(refreshError);
                 }

@@ -1,5 +1,5 @@
 import type { LoginSchema, RegisterSchema, VerifyOTPSchema, CreateWorkspace, UpdateWorkspace, CreateBoard, UpdateBoard, CreateList, ReorderList, CopyList, MoveList, UpdateList, AssignMember, UpdateCard, ReorderCard, CopyCard, MoveCard, UpdateProfileSchema, ChangePasswordSchema } from "../lib/types";
-import type { CreateChecklist, UpdateChecklist } from "../types/checklist/type";
+import type { CreateChecklist } from "../types/checklist/type";
 import { API_ENDPOINT } from "./api-endpoint";
 import { FetchFactory, fetchFactory } from "./fetch-factory";
 
