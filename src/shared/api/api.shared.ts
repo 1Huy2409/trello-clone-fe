@@ -1,4 +1,4 @@
-import type { LoginSchema, RegisterSchema, VerifyOTPSchema, CreateWorkspace, UpdateWorkspace, CreateBoard, UpdateBoard, CreateList, ReorderList, CopyList, MoveList, UpdateList, AssignMember, UpdateCard, ReorderCard, CopyCard, MoveCard, UpdateProfileSchema } from "../lib/types";
+import type { LoginSchema, RegisterSchema, VerifyOTPSchema, CreateWorkspace, UpdateWorkspace, CreateBoard, UpdateBoard, CreateList, ReorderList, CopyList, MoveList, UpdateList, AssignMember, UpdateCard, ReorderCard, CopyCard, MoveCard, UpdateProfileSchema, ChangePasswordSchema } from "../lib/types";
 import type { CreateChecklist, UpdateChecklist } from "../types/checklist/type";
 import { API_ENDPOINT } from "./api-endpoint";
 import { FetchFactory, fetchFactory } from "./fetch-factory";
@@ -39,6 +39,10 @@ export const api = {
         },
         refreshToken: async <T = any>(): Promise<ApiResponse<T>> => {
             const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.auth.refreshToken, {}, { withCredentials: true });
+            return res.data;
+        },
+        changePassword: async <T = any>(data: ChangePasswordSchema): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.auth.changePassword, data, { withCredentials: true });
             return res.data;
         },
         logout: async <T = any>(): Promise<ApiResponse<T>> => {

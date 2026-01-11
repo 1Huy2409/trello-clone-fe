@@ -5,6 +5,7 @@ export const API_ENDPOINT = {
         verifyOTP: '/auth/verify-otp',
         register: '/auth/register',
         refreshToken: '/auth/processNewToken',
+        changePassword: '/auth/change-password',
         logout: '/auth/logout',
     },
     user: {

@@ -9,6 +9,7 @@ import { Alert, AlertDescription } from "@/shared/components/ui/alert"
 import { uploadAvatar } from "../api/uploadAvatarApi"
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar"
 import { Camera } from "lucide-react"
+import { updateProfileApi } from "../api/updateProfileApi"
 
 export function EditProfileForm() {
     const { user, setUser } = useSessionStore()
@@ -49,7 +50,7 @@ export function EditProfileForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        // TODO: Call API to update profile
+        updateProfileApi(formData)
         console.log("Updating profile:", formData)
         setMessage("Profile updated successfully (Mock).")
 

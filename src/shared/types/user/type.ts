@@ -14,3 +14,9 @@ export interface UpdateProfileSchema {
     avatarUrl?: string;
     description?: string;
 }
+
+export interface ChangePasswordSchema {
+    currentPassword: string;
+    newPassword: string;
+    confirmNewPassword: string;
+}
