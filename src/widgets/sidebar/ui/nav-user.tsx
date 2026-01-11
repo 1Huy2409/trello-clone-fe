@@ -59,7 +59,7 @@ export function NavUser({ user }: NavUserProps) {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -79,7 +79,7 @@ export function NavUser({ user }: NavUserProps) {
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
                   <AvatarFallback className="rounded-lg">
-                    {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    {user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -93,12 +93,6 @@ export function NavUser({ user }: NavUserProps) {
               <Link to="/profile">
                 <User className="w-4 h-4 mr-2" />
                 Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/profile">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />

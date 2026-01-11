@@ -4,7 +4,8 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/shared/components/ui/sidebar"
-import { mockUser, useCommonStore } from "@/shared/stores/commonStore";
+import { useCommonStore } from "@/shared/stores/commonStore";
+import { useSessionStore } from "@/entities/session";
 import {
   Layout,
   Kanban,
@@ -12,8 +13,11 @@ import {
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { NavWorkspaces } from "./nav-workspaces";
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { workspaces } = useCommonStore()
+  const user = useSessionStore((state) => state.user)
+
   const navMain = [
     {
       title: 'Dashboard',
@@ -22,14 +26,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       isActive: true
     },
   ]
-  const userData = mockUser ? {
-    name: mockUser.fullname,
-    email: mockUser.email,
-    avatar: mockUser.avatarUrl
+
+  const userData = user ? {
+    name: user.fullname || "User",
+    email: user.email,
+    avatar: user.avatarUrl || "https://github.com/shadcn.png"
   } : {
     name: 'Guest',
-    email: 'nhathuy2409@gmail.com',
-    avatar: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fdienmaycholon.com%2Fkinh-nghiem-mua-sam%2Favatar-cute&psig=AOvVaw1G9v8zFL9xfy9V33sTLBxe&ust=1764321428093000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCOiBodf_kZEDFQAAAAAdAAAAABAE'
+    email: 'guest@example.com',
+    avatar: 'https://github.com/shadcn.png'
   }
   const allWorkspaces = Object.values(workspaces)
   return (
