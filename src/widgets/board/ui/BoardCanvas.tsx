@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useQueries } from "@tanstack/react-query";
 import { List } from "@/entities/list/ui/List";
 import { ListOptions } from "@/features/list/ui/ListOptions";
 import { CreateList } from "@/features/list/ui/CreateList";
 import type { List as ListType, Card as CardType } from "@/shared/lib/types";
+import { useListsByBoard } from "@/entities/list/api/use-lists";
+import { api } from "@/shared/api";
+import { cardKeys } from "@/entities/card/api/query-keys";
 
 // Helper interface for local state
 interface ListWithCards extends ListType {
@@ -16,26 +19,47 @@ interface BoardCanvasProps {
 }
 
 export function BoardCanvas({ boardId }: BoardCanvasProps) {
-    const { lists, cards } = useCommonStore();
+    const { data: lists = [] } = useListsByBoard(boardId);
+
+    // Fetch cards for all lists
+    const cardQueries = useQueries({
+        queries: lists.map((list) => ({
+            queryKey: cardKeys.byList(list.id),
+            queryFn: async () => {
+                const res = await api.card.getCardByListId<CardType[]>(list.id);
+                return { listId: list.id, cards: res.responseObject };
+            },
+            enabled: !!list.id,
+        })),
+    });
+
     const [boardLists, setBoardLists] = useState<ListWithCards[]>([]);
 
-    // Initialize local state from store
-    useEffect(() => {
-        if (!boardId) return;
+    // Combine lists and cards into local state
+    // We only update local state when queries change AND we are NOT dragging (to prevent stutter)
+    // Actually, for simplicity, we initial sync, and then maybe sync on valid changes?
+    // A simple useEffect watching the data might be enough if we don't worry too much about race conditions with optimistic UI yet.
 
-        const currentLists = lists
-            .filter((l) => l.boardId === boardId)
+    // Combine lists and cards
+    const combinedData = useMemo(() => {
+        if (!lists) return [];
+        return lists
+            .map(list => {
+                const query = cardQueries.find(q => q.data?.listId === list.id);
+                const cards = query?.data?.cards || [];
+                return {
+                    ...list,
+                    items: [...cards].sort((a, b) => parseInt(a.position) - parseInt(b.position))
+                };
+            })
             .sort((a, b) => parseInt(a.position) - parseInt(b.position));
+    }, [lists, cardQueries]);
 
-        const listsWithCards: ListWithCards[] = currentLists.map((list) => {
-            const listCards = cards
-                .filter((c) => c.listId === list.id)
-                .sort((a, b) => parseInt(a.position) - parseInt(b.position));
-            return { ...list, items: listCards };
-        });
-
-        setBoardLists(listsWithCards);
-    }, [boardId, lists, cards]);
+    // Sync state with server data
+    // Use JSON.stringify to prevent infinite loop due to object reference changes
+    useEffect(() => {
+        setBoardLists(combinedData);
+    }, [JSON.stringify(combinedData)]);
 
     const onDragEnd = (result: DropResult) => {
         const { destination, source, type } = result;
@@ -139,7 +163,7 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="board-lists" direction="horizontal" type="list">
-                {(provided, snapshot) => (
+                {(provided) => (
                     <div
                         {...provided.droppableProps}
                         ref={provided.innerRef}

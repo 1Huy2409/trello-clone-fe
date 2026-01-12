@@ -20,8 +20,10 @@ import {
     useCreateWorkspaceRole,
     useUpdateWorkspaceRole,
     useDeleteWorkspaceRole,
-    useArchiveWorkspace
+    useArchiveWorkspace,
+    useDeleteWorkspace
 } from "@/entities/workspace/api/use-workspaces";
+import { useNavigate } from "react-router";
 
 interface WorkspaceSettingsProps {
     workspace: Workspace;
@@ -30,6 +32,7 @@ interface WorkspaceSettingsProps {
 
 
 export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
+    const navigate = useNavigate();
     const [title, setTitle] = useState(workspace.title);
     const [description, setDescription] = useState(workspace.description || "");
 
@@ -41,6 +44,7 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
     const { mutate: updateRole } = useUpdateWorkspaceRole();
     const { mutate: deleteRole } = useDeleteWorkspaceRole();
     const { mutate: archiveWorkspace } = useArchiveWorkspace();
+    const { mutate: deleteWorkspace, isPending: isDeleting } = useDeleteWorkspace();
 
     // Role Management State
     const [isRoleDialogOpen, setIsRoleDialogOpen] = useState(false);
@@ -119,6 +123,20 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
 
     const handleArchive = () => {
         archiveWorkspace(workspace.id);
+    };
+
+    const handleDeleteWorkspace = () => {
+        if (window.confirm("Are you sure you want to delete this workspace? This action cannot be undone.")) {
+            deleteWorkspace(workspace.id, {
+                onSuccess: () => {
+                    toast.success("Workspace deleted successfully");
+                    navigate("/");
+                },
+                onError: (error: any) => {
+                    toast.error(error.message || "Failed to delete workspace");
+                }
+            });
+        }
     };
 
     return (
@@ -273,7 +291,8 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                 <p className="text-sm text-muted-foreground">
                     Deleting a workspace is permanent and cannot be undone. All boards and cards within this workspace will be deleted.
                 </p>
-                <Button variant="destructive">
+                <Button variant="destructive" onClick={handleDeleteWorkspace} disabled={isDeleting}>
+                    {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Delete Workspace
                 </Button>
             </div>

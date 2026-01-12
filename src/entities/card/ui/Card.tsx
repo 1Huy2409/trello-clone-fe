@@ -21,6 +21,7 @@ export const Card = ({ card, index }: CardProps) => {
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
+                    style={{ ...provided.draggableProps.style }}
                     className={`mb-2 ${snapshot.isDragging ? "opacity-50" : ""}`}
                 >
                     <ShadcnCard className="cursor-grab active:cursor-grabbing hover:border-primary/50 transition-colors">
@@ -57,3 +58,5 @@ export const Card = ({ card, index }: CardProps) => {
         </Draggable>
     );
 };
+
+Card.displayName = "Card";
