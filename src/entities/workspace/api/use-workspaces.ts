@@ -196,3 +196,16 @@ export const useReopenWorkspace = () => {
         },
     });
 };
+
+export const useDeleteWorkspace = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const response = await api.workspace.deleteWorkspace(id);
+            return response.responseObject;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+        },
+    });
+};
