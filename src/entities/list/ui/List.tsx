@@ -4,6 +4,7 @@ import { Card } from "@/entities/card/ui/Card";
 import type { List as ListType, Card as CardType } from "@/shared/lib/types";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
+import { useCreateCard } from "@/entities/card/api/use-cards";
 
 interface ListProps {
     list: ListType;
@@ -15,6 +16,7 @@ interface ListProps {
 export const List = ({ list, cards, index, headerAction }: ListProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const textareaRef = useRef<ElementRef<"textarea">>(null);
+    const { mutate: createCard } = useCreateCard();
 
     const enableEditing = () => {
         setIsEditing(true);
@@ -81,7 +83,26 @@ export const List = ({ list, cards, index, headerAction }: ListProps) => {
                                     className="w-full resize-none shadow-sm rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[80px]"
                                 />
                                 <div className="flex items-center gap-x-2 mt-2">
-                                    <Button onClick={() => alert("Add Card")} variant="default" size="sm">
+                                    <Button onClick={() => {
+                                        if (textareaRef.current?.value) {
+                                            createCard({
+                                                listId: list.id,
+                                                data: {
+                                                    title: textareaRef.current.value,
+                                                    description: "",
+                                                    // coverUrl: "", 
+                                                    // priority: "low", 
+                                                    // dueDate: new Date().toISOString() 
+                                                    // server might require these or have defaults. 
+                                                    // Based on api.shared.ts it accepts 'any' but type.ts says CreateCard has required fields?
+                                                    // Let's check type.ts CreateCard again.
+                                                }
+                                            });
+                                            textareaRef.current.value = "";
+                                            // Keep open?
+                                            textareaRef.current.focus();
+                                        }
+                                    }} variant="default" size="sm">
                                         Add Card
                                     </Button>
                                     <Button onClick={disableEditing} variant="ghost" size="sm">

@@ -1,6 +1,6 @@
 import { useState, useRef, type ElementRef, useEffect } from "react";
 import { Plus, X } from "lucide-react";
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useCreateList } from "@/entities/list/api/use-lists";
 import { Button } from "@/shared/components/ui/button";
 
 interface CreateListProps {
@@ -13,7 +13,7 @@ export const CreateList = ({ boardId }: CreateListProps) => {
     const formRef = useRef<ElementRef<"form">>(null);
     const inputRef = useRef<ElementRef<"input">>(null);
 
-    const { addList } = useCommonStore();
+    const { mutate: createList } = useCreateList();
 
     const enableEditing = () => {
         setIsEditing(true);
@@ -55,14 +55,11 @@ export const CreateList = ({ boardId }: CreateListProps) => {
     const onSubmit = (formData: FormData) => {
         const title = formData.get("title") as string;
 
-        if (!title.trim()) return; // Don't add empty lists
+        if (!title.trim()) return;
 
-        addList(boardId, title);
-        disableEditing(); // Or keep open for rapid entry? Usually keep open for Cards, close for Lists? Trello closes for lists I think? No, actually Trello might modify this. Let's close for now or check.
-        // Actually Trello keeps list creation open to add another one right away?
-        // Let's just focus input again if we want that.
-        // For now, I'll close it to match standard simple behavior, or keep it open if it's "Add another list".
-        // Let's keep it open and clear title.
+        createList({ boardId, data: { title } });
+        // disableEditing(); // Trello behavior: keep open?
+        // Let's keep it open for now as per previous logic intent, but clear title
         setTitle("");
         inputRef.current?.focus();
     };

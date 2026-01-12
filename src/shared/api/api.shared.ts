@@ -198,8 +198,9 @@ export const api = {
             const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.board.getBoardMembers, { withCredentials: true });
             return res.data;
         },
-        getBoardLists: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.board.getBoardLists, { withCredentials: true });
+        getBoardLists: async <T = any>(boardId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.getBoardLists.replace(':id', boardId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
         changeOwnerBoard: async <T = any>(): Promise<ApiResponse<T>> => {
@@ -208,8 +209,9 @@ export const api = {
         },
     },
     list: {
-        createList: async <T = any>(data: CreateList): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.board.createList, data, { withCredentials: true });
+        createList: async <T = any>(boardId: string, data: CreateList): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.createList.replace(':id', boardId);
+            const res = await axiosInstance.post<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
         reorderList: async <T = any>(data: ReorderList): Promise<ApiResponse<T>> => {
@@ -238,12 +240,14 @@ export const api = {
         },
     },
     card: {
-        createCard: async <T = any>(data: any): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.post<ApiResponse<T>>(API_ENDPOINT.list.createCard, data, { withCredentials: true });
+        createCard: async <T = any>(listId: string, data: any): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.list.createCard.replace(':listId', listId);
+            const res = await axiosInstance.post<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        getCardByListId: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.list.createCard, { withCredentials: true });
+        getCardByListId: async <T = any>(listId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.card.getCardByListId.replace(':listId', listId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
         getCardMembers: async <T = any>(): Promise<ApiResponse<T>> => {

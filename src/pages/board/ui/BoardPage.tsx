@@ -1,11 +1,14 @@
 import { useParams } from "react-router";
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useBoardById } from "@/entities/board/api/use-boards";
 import { BoardCanvas } from "@/widgets/board/ui/BoardCanvas";
 
 export default function BoardPage() {
     const { id: boardId } = useParams<{ id: string }>();
-    const { boards } = useCommonStore();
-    const board = boards.find(b => b.id === boardId);
+    const { data: board, isLoading } = useBoardById(boardId || "");
+
+    if (isLoading) {
+        return <div className="p-8">Loading board...</div>;
+    }
 
     if (!board || !boardId) {
         return <div className="p-8">Board not found</div>;
