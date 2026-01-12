@@ -95,6 +95,12 @@ export function NavUser({ user }: NavUserProps) {
                 Profile
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/settings">
+                <Settings className="w-4 h-4 mr-2" />
+                Settings
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link onClick={handleLogout} to="/auth/login" className="text-red-600">

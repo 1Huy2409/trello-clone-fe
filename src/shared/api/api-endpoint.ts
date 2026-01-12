@@ -15,6 +15,7 @@ export const API_ENDPOINT = {
     },
     workspace: {
         getAllWorkspaces: '/workspaces',
+        getArchivedWorkspaces: '/workspaces/archived',
         getWorkspaceById: '/workspaces/:id',
         createWorkspace: '/workspaces',
         updateWorkspace: '/workspaces/:id',

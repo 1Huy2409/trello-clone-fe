@@ -168,6 +168,31 @@ export const useArchiveWorkspace = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+            queryClient.invalidateQueries({ queryKey: ['archived-workspaces'] });
+        },
+    });
+};
+
+export const useArchivedWorkspaces = () => {
+    return useQuery({
+        queryKey: ['archived-workspaces'], // TODO: Add to query-keys
+        queryFn: async () => {
+            const response = await api.workspace.getArchivedWorkspaces<Workspace[]>();
+            return response.responseObject;
+        },
+    });
+};
+
+export const useReopenWorkspace = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => {
+            const response = await api.workspace.reopenWorkspace(id);
+            return response.responseObject;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: workspaceKeys.lists() });
+            queryClient.invalidateQueries({ queryKey: ['archived-workspaces'] });
         },
     });
 };

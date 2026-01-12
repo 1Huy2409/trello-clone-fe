@@ -13,6 +13,7 @@ import BoardPage from "../pages/board/ui/BoardPage"
 import { ProtectedRoute } from "@/features/auth/ui/ProtectedRoute"
 import { PublicRoute } from "@/features/auth/ui/PublicRoute"
 import ProfilePage from "@/pages/profile/ui/ProfilePage"
+import { SettingPage } from "@/pages/settings"
 import { Toaster } from "@/shared/components/ui/sonner"
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<DashboardPage />} />
             <Route path="profile" element={<ProfilePage />} />
+            <Route path="settings" element={<SettingPage />} />
             <Route path="workspace/:id" element={<WorkspacePage />} />
             <Route path="workspace/:id/settings" element={<WorkspaceSettingsPage />} />
             <Route path="workspace/:id/members" element={<WorkspaceMembersPage />} />

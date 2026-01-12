@@ -73,6 +73,10 @@ export const api = {
             const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.workspace.getAllWorkspaces, { withCredentials: true });
             return res.data;
         },
+        getArchivedWorkspaces: async <T = any>(): Promise<ApiResponse<T>> => {
+            const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.workspace.getArchivedWorkspaces, { withCredentials: true });
+            return res.data;
+        },
         getWorkspaceById: async <T = any>(id: string): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.getWorkspaceById.replace(':id', id);
             const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
@@ -94,12 +98,12 @@ export const api = {
         },
         archiveWorkspace: async <T = any>(id: string): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.archiveWorkspace.replace(':id', id);
-            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
         reopenWorkspace: async <T = any>(id: string): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.reopenWorkspace.replace(':id', id);
-            const res = await axiosInstance.delete<ApiResponse<T>>(url, { withCredentials: true });
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, { withCredentials: true });
             return res.data;
         },
         getWorkspaceMembers: async <T = any>(workspaceId: string): Promise<ApiResponse<T>> => {
