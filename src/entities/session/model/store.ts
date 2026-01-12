@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { User } from "@/shared/types/user/type";
 
+import { queryClient } from "@/shared/api/query-client";
+
 interface AuthState {
     user: User | null;
     accessToken: string | null;
@@ -21,7 +23,10 @@ export const useSessionStore = create<AuthState>()(
             setUser: (user) => set({ user }),
             clearAccessToken: () => set({ accessToken: null }),
 
-            logout: () => set({ accessToken: null, user: null }),
+            logout: () => {
+                queryClient.removeQueries();
+                set({ accessToken: null, user: null });
+            },
         }),
         {
             name: "accessToken",

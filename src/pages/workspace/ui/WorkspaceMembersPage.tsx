@@ -1,14 +1,17 @@
 import { WorkspaceMembers } from "@/widgets/workspace/ui/WorkspaceMembers";
-import { useCommonStore } from "@/shared/stores/commonStore";
+import { useWorkspace } from "@/entities/workspace/api/use-workspaces";
 import { useParams } from "react-router";
+import { PageLoader } from "@/shared/components/ui/page-loader";
 
 export default function WorkspaceMembersPage() {
     const { id } = useParams<{ id: string }>();
-    const { workspaces } = useCommonStore();
+    const { data: workspace, isLoading } = useWorkspace(id);
+
+    if (isLoading) {
+        return <PageLoader />;
+    }
 
     // Find the workspace to ensure it exists
-    const workspace = workspaces.find((w) => w.id === id);
-
     if (!workspace) {
         return (
             <div className="flex items-center justify-center h-full">

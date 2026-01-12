@@ -13,7 +13,7 @@ export function AppLayout() {
       <AppSidebar />
       <SidebarInset className="h-screen overflow-hidden">
         <Header />
-        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto p-4 scrollbar-hide flex flex-col">
           <Suspense key={location.pathname} fallback={<PageLoader />}>
             <Outlet />
           </Suspense>

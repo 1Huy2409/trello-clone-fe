@@ -10,7 +10,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
-import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context"; // Reusing this context for now
+import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
+import { useDeleteBoard } from "@/entities/board/api/use-boards";
 
 interface WorkspaceBoardListProps {
     setIsCreateBoardOpen: (value: boolean) => void;
@@ -21,8 +22,12 @@ export function WorkspaceBoardList({ setIsCreateBoardOpen }: WorkspaceBoardListP
     const setIsEditDialogOpen = useContext(SetIsEditDialogOpenContext);
     const setSelectedBoardId = useContext(SetSelectedBoardIdContext);
 
+    const { mutate: deleteBoard } = useDeleteBoard();
+
     const handleDelete = (boardId: string) => {
-        alert('Delete board with ID: ' + boardId);
+        if (confirm("Are you sure you want to delete this board?")) {
+            deleteBoard(boardId);
+        }
     }
 
     if (boards.length === 0) {
