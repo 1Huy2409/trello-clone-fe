@@ -10,7 +10,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/shared/components/ui/dialog";
-import { Plus, Check } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { WorkspaceRole, PermissionDefinition } from "@/shared/types/workspace/type";
 
@@ -20,18 +19,14 @@ interface RoleDialogProps {
     role: WorkspaceRole | null;
     permissions: PermissionDefinition[];
     onSave: (roleData: any) => void;
-    onCreatePermission: (action: string, description: string) => void;
 }
 
-export function RoleDialog({ open, onOpenChange, role, permissions, onSave, onCreatePermission }: RoleDialogProps) {
+import { toast } from "sonner";
+
+export function RoleDialog({ open, onOpenChange, role, permissions, onSave }: RoleDialogProps) {
     const [roleName, setRoleName] = useState("");
     const [roleDescription, setRoleDescription] = useState("");
     const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
-
-    // Inline Permission Creation State
-    const [isCreatingPermission, setIsCreatingPermission] = useState(false);
-    const [newPermAction, setNewPermAction] = useState("");
-    const [newPermDesc, setNewPermDesc] = useState("");
 
     useEffect(() => {
         if (role) {
@@ -43,12 +38,13 @@ export function RoleDialog({ open, onOpenChange, role, permissions, onSave, onCr
             setRoleDescription("");
             setSelectedPermissions([]);
         }
-        setIsCreatingPermission(false);
-        setNewPermAction("");
-        setNewPermDesc("");
     }, [role, open]);
 
     const handleSave = () => {
+        if (!roleName.trim()) {
+            toast.error("Role name is required");
+            return;
+        }
         onSave({
             id: role?.id,
             name: roleName,
@@ -64,14 +60,6 @@ export function RoleDialog({ open, onOpenChange, role, permissions, onSave, onCr
                 ? prev.filter(p => p !== permission)
                 : [...prev, permission]
         );
-    };
-
-    const handleCreatePermissionSubmit = () => {
-        if (!newPermAction.trim() || !newPermDesc.trim()) return;
-        onCreatePermission(newPermAction, newPermDesc);
-        setNewPermAction("");
-        setNewPermDesc("");
-        setIsCreatingPermission(false);
     };
 
     return (
@@ -107,65 +95,7 @@ export function RoleDialog({ open, onOpenChange, role, permissions, onSave, onCr
                     <div className="space-y-3">
                         <div className="flex items-center justify-between">
                             <Label>Permissions</Label>
-                            {!isCreatingPermission ? (
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-6 text-xs"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setIsCreatingPermission(true);
-                                    }}
-                                >
-                                    <Plus className="w-3 h-3 mr-1" />
-                                    New Permission
-                                </Button>
-                            ) : (
-                                <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    className="h-6 text-xs text-muted-foreground"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setIsCreatingPermission(false);
-                                    }}
-                                >
-                                    Cancel
-                                </Button>
-                            )}
                         </div>
-
-                        {isCreatingPermission && (
-                            <div className="p-3 border rounded-md bg-muted/30 space-y-3 mb-3 animate-in fade-in slide-in-from-top-1">
-                                <div className="grid grid-cols-2 gap-3">
-                                    <div className="space-y-1">
-                                        <Label htmlFor="new-perm-action" className="text-xs">Action</Label>
-                                        <Input
-                                            id="new-perm-action"
-                                            value={newPermAction}
-                                            onChange={(e) => setNewPermAction(e.target.value)}
-                                            placeholder="e.g. view:analytics"
-                                            className="h-8 text-xs"
-                                        />
-                                    </div>
-                                    <div className="space-y-1">
-                                        <Label htmlFor="new-perm-desc" className="text-xs">Description</Label>
-                                        <div className="flex gap-2">
-                                            <Input
-                                                id="new-perm-desc"
-                                                value={newPermDesc}
-                                                onChange={(e) => setNewPermDesc(e.target.value)}
-                                                placeholder="Validation description"
-                                                className="h-8 text-xs"
-                                            />
-                                            <Button size="sm" className="h-8 w-8 px-0" onClick={handleCreatePermissionSubmit}>
-                                                <Check className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
 
                         <ScrollArea className="h-[300px] border rounded-lg p-4">
                             <div className="grid grid-cols-2 gap-4">

@@ -129,7 +129,7 @@ export const api = {
         },
         updateWorkspaceRole: async <T = any>(workspaceId: string, roleId: string, data: UpdateWorkspaceRole): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.workspace.updateWorkspaceRole.replace(':id', workspaceId).replace(':roleId', roleId);
-            const res = await axiosInstance.put<ApiResponse<T>>(url, data, { withCredentials: true });
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
         deleteWorkspaceRole: async <T = any>(workspaceId: string, roleId: string): Promise<ApiResponse<T>> => {

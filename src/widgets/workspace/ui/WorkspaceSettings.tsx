@@ -5,7 +5,6 @@ import type { Workspace, WorkspaceRole } from "@/shared/lib/types";
 
 import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash, Archive, Loader2 } from "lucide-react";
 import { useState } from "react";
-// import { useCommonStore } from "@/shared/stores/commonStore";
 import { toast } from "sonner";
 import {
     DropdownMenu,
@@ -23,7 +22,6 @@ import {
     useDeleteWorkspaceRole,
     useArchiveWorkspace
 } from "@/entities/workspace/api/use-workspaces";
-// import { toast } from "sonner"; // Assuming sonner or use toast hook
 
 interface WorkspaceSettingsProps {
     workspace: Workspace;
@@ -67,14 +65,6 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
         setIsRoleDialogOpen(true);
     };
 
-    const handleCreatePermission = (action: string, description: string) => {
-        console.log("Create Permission (Not Implemented on Backend):", {
-            action: action.toUpperCase().replace(/\s+/g, '_'),
-            description: description,
-        });
-        // This feature seems to be for creating a permission definition which might not be supported dynamically
-    };
-
     const handleSaveRole = (roleData: any) => {
         if (editingRole) {
             updateRole({
@@ -85,6 +75,14 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                     description: roleData.description,
                     permissions: roleData.permissions
                 }
+            }, {
+                onSuccess: () => {
+                    toast.success("Role updated successfully");
+                },
+                onError: (error: any) => {
+                    const message = error.response?.data?.message || error.message || "Failed to update role";
+                    toast.error(message);
+                }
             });
         } else {
             createRole({
@@ -94,13 +92,29 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                     description: roleData.description,
                     permissions: roleData.permissions
                 }
+            }, {
+                onSuccess: () => {
+                    toast.success("Role created successfully");
+                },
+                onError: (error: any) => {
+                    const message = error.response?.data?.message || error.message || "Failed to create role";
+                    toast.error(message);
+                }
             });
         }
         setIsRoleDialogOpen(false);
     };
 
     const handleDeleteRole = (roleId: string) => {
-        deleteRole({ workspaceId: workspace.id, roleId });
+        deleteRole({ workspaceId: workspace.id, roleId }, {
+            onSuccess: () => {
+                toast.success("Role deleted successfully");
+            },
+            onError: (error: any) => {
+                const message = error.response?.data?.message || error.message || "Failed to delete role";
+                toast.error(message);
+            }
+        });
     };
 
     const handleArchive = () => {
@@ -191,13 +205,6 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                                         )}
                                     </h4>
                                     <p className="text-sm text-muted-foreground mb-1">{role.description}</p>
-                                    <div className="flex flex-wrap gap-1">
-                                        {role.permissions.map((p) => (
-                                            <span key={p.id} className="text-[10px] border px-1.5 py-0.5 rounded text-muted-foreground bg-background" title={p.description}>
-                                                {p.action}
-                                            </span>
-                                        ))}
-                                    </div>
                                 </div>
                             </div>
                             <DropdownMenu>
@@ -238,7 +245,6 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
                 role={editingRole}
                 permissions={permissions}
                 onSave={handleSaveRole}
-                onCreatePermission={handleCreatePermission}
             />
 
             <Separator />

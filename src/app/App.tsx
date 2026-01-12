@@ -37,7 +37,7 @@ function App() {
           </Route>
         </Route>
       </Routes>
-      <Toaster />
+      <Toaster position="top-center" />
     </BrowserRouter>
   )
 }
