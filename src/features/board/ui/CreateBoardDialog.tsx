@@ -11,7 +11,7 @@ import {
 } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-// import { useBoardStore } from '@/shared/stores/useBoardStore';
+import { useCreateBoard } from '@/entities/board/api/use-boards';
 
 interface CreateBoardDialogProps {
     open: boolean;
@@ -22,20 +22,28 @@ interface CreateBoardDialogProps {
 export function CreateBoardDialog({ open, onOpenChange, workspaceId }: CreateBoardDialogProps) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    // const navigate = useNavigate();
-    // const { createBoard, currentWorkspace } = useBoardStore();
+    const { mutateAsync: createBoard, isPending } = useCreateBoard();
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Submit create board!')
-        // const targetWorkspace = workspaceId || currentWorkspace;
-        // if (!title.trim() || !targetWorkspace) return;
 
-        // const boardId = createBoard(targetWorkspace, title.trim(), description.trim());
-        // setTitle('');
-        // setDescription('');
-        // onOpenChange(false);
-        // navigate(`/board/${boardId}`);
+        if (!title.trim() || !workspaceId) return;
+
+        try {
+            await createBoard({
+                workspaceId,
+                data: {
+                    title: title.trim(),
+                    description: description.trim(),
+                },
+            });
+            setTitle('');
+            setDescription('');
+            onOpenChange(false);
+        } catch (error) {
+            console.error('Failed to create board:', error);
+            // Ideally add toast notification here
+        }
     };
 
     return (
@@ -70,11 +78,11 @@ export function CreateBoardDialog({ open, onOpenChange, workspaceId }: CreateBoa
                         </div>
                     </div>
                     <DialogFooter>
-                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                        <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
                             Cancel
                         </Button>
-                        <Button type="submit" disabled={!title.trim()}>
-                            Create Board
+                        <Button type="submit" disabled={!title.trim() || isPending}>
+                            {isPending ? 'Creating...' : 'Create Board'}
                         </Button>
                     </DialogFooter>
                 </form>
