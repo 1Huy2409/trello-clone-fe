@@ -165,7 +165,7 @@ export const api = {
         },
         updateBoard: async <T = any>(boardId: string, data: UpdateBoard): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.board.updateBoard.replace(':boardId', boardId);
-            const res = await axiosInstance.put<ApiResponse<T>>(url, data, { withCredentials: true });
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
         deleteBoard: async <T = any>(boardId: string): Promise<ApiResponse<T>> => {

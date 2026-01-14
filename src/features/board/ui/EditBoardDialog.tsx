@@ -13,6 +13,7 @@ import { Label } from '@/shared/components/ui/label';
 import type { Board } from '@/shared/lib/types';
 import { useUpdateBoard } from "@/entities/board/api/use-boards";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 
 interface EditBoardDialogProps {
@@ -48,18 +49,17 @@ export function EditBoardDialog({ board, open, onOpenChange }: EditBoardDialogPr
             }
         }, {
             onSuccess: () => {
+                toast.success("Board updated successfully");
                 onOpenChange && onOpenChange(false);
+            },
+            onError: (error) => {
+                toast.error("Failed to update board");
+                console.error("Update board error:", error);
             }
         });
     };
 
     const handleCancel = () => {
-        // Reset form to original values
-        // if (board) {
-        //     setTitle(board.title);
-        //     setDescription(board.description || '');
-        // }
-        console.log('Cancel edit board!')
         onOpenChange && onOpenChange(false);
     };
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useWorkspaces } from "@/entities/workspace/api/use-workspaces";
-import { useBoardsByWorkspace, useBoardById, useDeleteBoard } from "@/entities/board/api/use-boards";
+import { useBoardsByWorkspace, useBoardById } from "@/entities/board/api/use-boards";
 import type { Workspace, Board } from "@/shared/lib/types";
 import { PageLoader } from "@/shared/components/ui/page-loader";
 
@@ -14,6 +14,7 @@ import { BoardCard } from "@/entities/board/ui/BoardCard";
 import { CreateBoardDialog } from "@/features/board/ui/CreateBoardDialog";
 import { CreateWorkspaceDialog } from "@/features/workspace/ui/CreateWorkspaceDialog";
 import { EditBoardDialog } from "@/features/board/ui/EditBoardDialog";
+import { DeleteBoardAlertDialog } from "@/features/board/ui/DeleteBoardAlertDialog";
 
 // Shared Context
 import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
@@ -32,6 +33,7 @@ export function DashboardContent() {
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
     const [selectedWorkspaceForBoard, setSelectedWorkspaceForBoard] = useState<string | null>(null);
     const [selectedBoardId, setSelectedBoardId] = useState<string | null>(null);
+    const [boardToDelete, setBoardToDelete] = useState<string | null>(null);
 
     const { data: workspaces = [], isLoading: isLoadingWorkspaces } = useWorkspaces();
 
@@ -80,6 +82,7 @@ export function DashboardContent() {
                                     }}
                                     setSelectedBoardId={setSelectedBoardId}
                                     setIsEditDialogOpen={setIsEditDialogOpen}
+                                    setBoardToDelete={setBoardToDelete}
                                 />
                             ))}
                         </SetSelectedBoardIdContext.Provider>
@@ -109,6 +112,12 @@ export function DashboardContent() {
                 open={isCreateWorkspaceOpen}
                 onOpenChange={setIsCreateWorkspaceOpen}
             />
+
+            <DeleteBoardAlertDialog
+                open={!!boardToDelete}
+                onOpenChange={(open) => !open && setBoardToDelete(null)}
+                boardId={boardToDelete}
+            />
         </div>
     );
 }
@@ -132,22 +141,16 @@ function DashboardWorkspaceItem({
     workspace,
     onAddBoard,
     setSelectedBoardId,
-    setIsEditDialogOpen
+    setIsEditDialogOpen,
+    setBoardToDelete
 }: {
     workspace: Workspace;
     onAddBoard: () => void;
     setSelectedBoardId: (id: string) => void;
     setIsEditDialogOpen: (open: boolean) => void;
+    setBoardToDelete: (id: string) => void;
 }) {
     const { data: boards = [] } = useBoardsByWorkspace(workspace.id);
-
-    const { mutate: deleteBoard } = useDeleteBoard();
-
-    const handleDeleteBoard = (boardId: string) => {
-        if (confirm("Are you sure you want to delete this board?")) {
-            deleteBoard(boardId);
-        }
-    }
 
     return (
         <WorkspaceCard
@@ -188,7 +191,7 @@ function DashboardWorkspaceItem({
                                 <DropdownMenuItem
                                     onClick={(e) => {
                                         e.preventDefault();
-                                        handleDeleteBoard(board.id);
+                                        setBoardToDelete(board.id);
                                     }}
                                     className="text-destructive focus:text-destructive"
                                 >
@@ -203,3 +206,4 @@ function DashboardWorkspaceItem({
         </WorkspaceCard>
     );
 }
+

@@ -15,6 +15,19 @@ export const useBoardsByWorkspace = (workspaceId: string) => {
     });
 };
 
+export const useCreateBoard = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ workspaceId, data }: { workspaceId: string; data: { title: string; description?: string } }) => {
+            const response = await api.board.createBoardFromWorkspace(workspaceId, data);
+            return response.responseObject;
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries({ queryKey: boardKeys.byWorkspace(variables.workspaceId) });
+        },
+    });
+};
+
 export const useBoardById = (boardId: string) => {
     return useQuery({
         queryKey: boardKeys.detail(boardId),

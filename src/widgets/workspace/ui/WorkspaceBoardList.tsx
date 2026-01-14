@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { WorkspaceContext } from '@/features/workspace/shared/context';
 import { BoardCard } from '@/entities/board/ui/BoardCard';
 import { Button } from '@/shared/components/ui/button';
@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { SetIsEditDialogOpenContext, SetSelectedBoardIdContext } from "@/features/dashboard/shared/context";
-import { useDeleteBoard } from "@/entities/board/api/use-boards";
+import { DeleteBoardAlertDialog } from "@/features/board/ui/DeleteBoardAlertDialog";
 
 interface WorkspaceBoardListProps {
     setIsCreateBoardOpen: (value: boolean) => void;
@@ -22,13 +22,8 @@ export function WorkspaceBoardList({ setIsCreateBoardOpen }: WorkspaceBoardListP
     const setIsEditDialogOpen = useContext(SetIsEditDialogOpenContext);
     const setSelectedBoardId = useContext(SetSelectedBoardIdContext);
 
-    const { mutate: deleteBoard } = useDeleteBoard();
-
-    const handleDelete = (boardId: string) => {
-        if (confirm("Are you sure you want to delete this board?")) {
-            deleteBoard(boardId);
-        }
-    }
+    // Local state for delete dialog
+    const [deleteBoardId, setDeleteBoardId] = useState<string | null>(null);
 
     if (boards.length === 0) {
         return (
@@ -68,52 +63,60 @@ export function WorkspaceBoardList({ setIsCreateBoardOpen }: WorkspaceBoardListP
     );
 
     return (
-        <div className={viewMode === 'grid'
-            ? "grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-            : "flex flex-col gap-4"
-        }>
-            {boards.map((board) => (
-                <BoardCard
-                    key={board.id}
-                    board={board}
-                    actions={
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0"
-                                >
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setSelectedBoardId(board.id);
-                                        setIsEditDialogOpen(true);
-                                    }}
-                                >
-                                    <Edit className="w-4 h-4 mr-2" />
-                                    Edit Board
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleDelete(board.id);
-                                    }}
-                                    className="text-destructive focus:text-destructive"
-                                >
-                                    <Trash className="w-4 h-4 mr-2" />
-                                    Delete Board
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    }
-                />
-            ))}
-            <CreateBoardTile />
-        </div>
+        <>
+            <div className={viewMode === 'grid'
+                ? "grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                : "flex flex-col gap-4"
+            }>
+                {boards.map((board) => (
+                    <BoardCard
+                        key={board.id}
+                        board={board}
+                        actions={
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0"
+                                    >
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setSelectedBoardId(board.id);
+                                            setIsEditDialogOpen(true);
+                                        }}
+                                    >
+                                        <Edit className="w-4 h-4 mr-2" />
+                                        Edit Board
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setDeleteBoardId(board.id);
+                                        }}
+                                        className="text-destructive focus:text-destructive"
+                                    >
+                                        <Trash className="w-4 h-4 mr-2" />
+                                        Delete Board
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        }
+                    />
+                ))}
+                <CreateBoardTile />
+            </div>
+
+            <DeleteBoardAlertDialog
+                open={!!deleteBoardId}
+                onOpenChange={(open) => !open && setDeleteBoardId(null)}
+                boardId={deleteBoardId}
+            />
+        </>
     );
 }

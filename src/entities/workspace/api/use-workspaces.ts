@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { workspaceKeys } from "./query-keys";
+import { boardKeys } from "@/entities/board/api/query-keys";
 import { api } from "@/shared/api";
 import type { CreateWorkspace, UpdateWorkspace, AddWorkspaceMember, Workspace, WorkspaceRole, WorkspaceMember, PermissionDefinition, CreateWorkspaceRole, UpdateWorkspaceRole } from "@/shared/types/workspace/type";
 
@@ -26,7 +27,7 @@ export const useWorkspace = (id: string | undefined) => {
 
 export const useWorkspaceBoards = (id: string | undefined) => {
     return useQuery({
-        queryKey: [...workspaceKeys.detail(id || ''), 'boards'], // TODO: Define strict key in query-keys.ts
+        queryKey: boardKeys.byWorkspace(id!),
         queryFn: async () => {
             const response = await api.board.getBoardsByWorkspaceId(id!);
             return response.responseObject;
