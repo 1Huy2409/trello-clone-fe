@@ -122,7 +122,15 @@ export function WorkspaceSettings({ workspace }: WorkspaceSettingsProps) {
     };
 
     const handleArchive = () => {
-        archiveWorkspace(workspace.id);
+        archiveWorkspace(workspace.id, {
+            onSuccess: () => {
+                toast.success("Workspace archived successfully");
+                navigate("/");
+            },
+            onError: (error: any) => {
+                toast.error(error.message || "Failed to archive workspace");
+            }
+        });
     };
 
     const handleDeleteWorkspace = () => {
