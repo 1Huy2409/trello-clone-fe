@@ -6,6 +6,7 @@ import { ListOptions } from "@/features/list/ui/ListOptions";
 import { CreateList } from "@/features/list/ui/CreateList";
 import type { List as ListType, Card as CardType } from "@/shared/lib/types";
 import { useListsByBoard, useReorderList } from "@/entities/list/api/use-lists";
+import { useReorderCard } from "@/entities/card/api/use-cards";
 import { api } from "@/shared/api";
 import { cardKeys } from "@/entities/card/api/query-keys";
 
@@ -35,6 +36,7 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
 
     const [boardLists, setBoardLists] = useState<ListWithCards[]>([]);
     const { mutate: reorderList } = useReorderList();
+    const { mutate: reorderCard } = useReorderCard();
 
     const combinedData = useMemo(() => {
         if (!lists) return [];
@@ -115,12 +117,14 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
             const beforeCard = newCards[destination.index - 1];
             const afterCard = newCards[destination.index + 1];
 
-            console.log("Card Reorder Payload (Same List):", {
+            const payload = {
                 cardId: removed.id,
                 targetListId: destList.id,
                 beforeCardId: beforeCard ? beforeCard.id : null,
                 afterCardId: afterCard ? afterCard.id : null
-            });
+            };
+
+            reorderCard(payload);
 
         } else {
             // Move to another list
@@ -146,12 +150,14 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
             const beforeCard = destCards[destination.index - 1];
             const afterCard = destCards[destination.index + 1];
 
-            console.log("Card Reorder Payload (Cross List):", {
+            const payload = {
                 cardId: removed.id,
                 targetListId: destList.id,
                 beforeCardId: beforeCard ? beforeCard.id : null,
                 afterCardId: afterCard ? afterCard.id : null
-            });
+            };
+
+            reorderCard(payload);
         }
     };
 

@@ -54,3 +54,15 @@ export const useCreateCard = () => {
         },
     });
 };
+
+export const useReorderCard = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: import("@/shared/lib/types").ReorderCard) => {
+            return api.card.reorder(data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: cardKeys.all });
+        },
+    });
+};
