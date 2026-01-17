@@ -198,9 +198,9 @@ export const api = {
             const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.board.getBoardMembers, { withCredentials: true });
             return res.data;
         },
-        getBoardLists: async <T = any>(boardId: string): Promise<ApiResponse<T>> => {
+        getBoardLists: async <T = any>(boardId: string, params?: any): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.board.getBoardLists.replace(':id', boardId);
-            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { params, withCredentials: true });
             return res.data;
         },
         changeOwnerBoard: async <T = any>(): Promise<ApiResponse<T>> => {
@@ -209,6 +209,11 @@ export const api = {
         },
     },
     list: {
+        getArchiveLists: async <T = any>(boardId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.board.getArchiveLists.replace(':boardId', boardId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
+            return res.data;
+        },
         createList: async <T = any>(boardId: string, data: CreateList): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.board.createList.replace(':id', boardId);
             const res = await axiosInstance.post<ApiResponse<T>>(url, data, { withCredentials: true });
@@ -226,28 +231,41 @@ export const api = {
             const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.list.move, data, { withCredentials: true });
             return res.data;
         },
-        editListName: async <T = any>(data: UpdateList): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.list.editListName, data, { withCredentials: true });
+        editListName: async <T = any>(listId: string, data: UpdateList): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.list.editListName.replace(':listId', listId);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        archiveList: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.list.archive, { withCredentials: true });
+        archiveList: async <T = any>(listId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.list.archive.replace(':listId', listId);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
-        reopenList: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.list.reopen, { withCredentials: true });
+        reopenList: async <T = any>(listId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.list.reopen.replace(':listId', listId);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
     },
     card: {
+        getArchiveCards: async <T = any>(listId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.card.getArchiveCards.replace(':listId', listId);
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
+            return res.data;
+        },
         createCard: async <T = any>(listId: string, data: any): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.list.createCard.replace(':listId', listId);
             const res = await axiosInstance.post<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        getCardByListId: async <T = any>(listId: string): Promise<ApiResponse<T>> => {
+        getCardByListId: async <T = any>(listId: string, params?: any): Promise<ApiResponse<T>> => {
             const url = API_ENDPOINT.card.getCardByListId.replace(':listId', listId);
-            const res = await axiosInstance.get<ApiResponse<T>>(url, { withCredentials: true });
+            const res = await axiosInstance.get<ApiResponse<T>>(url, { params, withCredentials: true });
+            return res.data;
+        },
+        reopenCard: async <T = any>(cardId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.card.reopen.replace(':id', cardId);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
         getCardMembers: async <T = any>(): Promise<ApiResponse<T>> => {
@@ -296,7 +314,7 @@ export const api = {
         },
     },
     permission: {
-        getAllPermissions: async <T = any>(): Promise<ApiResponse<T>> => {
+        getAllPermissions: async<T = any>(): Promise<ApiResponse<T>> => {
             const res = await axiosInstance.get<ApiResponse<T>>(API_ENDPOINT.permission.getAllPermissions, { withCredentials: true });
             return res.data;
         }
