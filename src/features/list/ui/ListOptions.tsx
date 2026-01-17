@@ -1,4 +1,5 @@
 import { Button } from "@/shared/components/ui/button";
+import { useArchiveList } from "@/entities/list/api/use-lists";
 import {
     Popover,
     PopoverContent,
@@ -20,6 +21,7 @@ type ViewType = "main" | "move" | "copy" | "archive" | "sort";
 export const ListOptions = ({ list, onAddCard }: ListOptionsProps) => {
     const [view, setView] = useState<ViewType>("main");
     const [open, setOpen] = useState(false);
+    const { mutate: archiveList } = useArchiveList();
 
     const handleOpenChange = (isOpen: boolean) => {
         setOpen(isOpen);
@@ -73,7 +75,10 @@ export const ListOptions = ({ list, onAddCard }: ListOptionsProps) => {
             <Button
                 variant="ghost"
                 className="w-full justify-start h-8 px-2 text-sm font-normal"
-                onClick={() => alert("Archive list clicked")}
+                onClick={() => {
+                    archiveList(list.id);
+                    setOpen(false);
+                }}
             >
                 Archive list
             </Button>

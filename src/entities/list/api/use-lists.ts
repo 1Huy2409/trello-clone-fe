@@ -76,3 +76,39 @@ export const useMoveList = () => {
 };
 
 
+
+export const useArchiveList = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (listId: string) => {
+            return api.list.archiveList(listId);
+        },
+        onSuccess: () => {
+            // Invalidate all list queries to ensure the archived list is removed from the board
+            queryClient.invalidateQueries({ queryKey: listKeys.all });
+        },
+    });
+};
+
+export const useArchivedLists = (boardId: string) => {
+    return useQuery({
+        queryKey: [...listKeys.byBoard(boardId), 'archived'],
+        queryFn: async () => {
+            const response = await api.list.getArchiveLists<List[]>(boardId);
+            return response.responseObject;
+        },
+        enabled: !!boardId,
+    });
+};
+
+export const useReopenList = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (listId: string) => {
+            return api.list.reopenList(listId);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: listKeys.all });
+        },
+    });
+};

@@ -45,6 +45,7 @@ export const API_ENDPOINT = {
         getBoardMembers: '/boards/:id/members',
         getBoardLists: '/boards/:id/lists',
         createList: '/boards/:id/lists',
+        getArchiveLists: '/boards/:boardId/lists/archived',
         changeOwnerBoard: '/boards/:id/change-owner',
     },
     list: {
@@ -58,6 +59,7 @@ export const API_ENDPOINT = {
     },
     card: {
         getCardByListId: '/lists/:listId/cards',
+        getArchiveCards: '/lists/:listId/cards/archived',
         getCardMembers: '/cards/:id/members',
         getChecklists: '/cards/:id/checklists',
         assignMember: '/cards/:id/members',
