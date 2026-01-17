@@ -20,7 +20,7 @@ export interface MoveList {
     listId: string;
     targetBoardId: string;
     beforeListId: string | null;
-    afterListId: string;
+    afterListId: string | null;
 }
 export interface CopyList {
     listId: string;

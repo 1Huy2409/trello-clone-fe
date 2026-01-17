@@ -62,3 +62,17 @@ export const useCopyList = () => {
     });
 };
 
+export const useMoveList = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: import("@/shared/lib/types").MoveList) => {
+            return api.list.moveList(data);
+        },
+        onSuccess: () => {
+            // Invalidate all list queries to ensure both source and target boards are updated
+            queryClient.invalidateQueries({ queryKey: listKeys.all });
+        },
+    });
+};
+
+
