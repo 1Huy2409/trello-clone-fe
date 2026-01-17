@@ -66,3 +66,26 @@ export const useReorderCard = () => {
         },
     });
 };
+
+export const useUpdateCard = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, data }: { id: string; data: import("@/shared/lib/types").UpdateCard }) => {
+            return api.card.updateCard(id, data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: cardKeys.all });
+        },
+    });
+};
+export const useArchiveCard = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (cardId: string) => {
+            return api.card.archive(cardId);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: cardKeys.all });
+        },
+    });
+};

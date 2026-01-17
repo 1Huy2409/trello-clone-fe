@@ -288,12 +288,14 @@ export const api = {
             const res = await axiosInstance.delete<ApiResponse<T>>(API_ENDPOINT.card.removeMember, { withCredentials: true });
             return res.data;
         },
-        updateCard: async <T = any>(data: UpdateCard): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.card.updateCard, data, { withCredentials: true });
+        updateCard: async <T = any>(id: string, data: UpdateCard): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.card.updateCard.replace(':id', id);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
-        archive: async <T = any>(): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.card.archive, { withCredentials: true });
+        archive: async <T = any>(cardId: string): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.card.archive.replace(':id', cardId);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, {}, { withCredentials: true });
             return res.data;
         },
         reopen: async <T = any>(): Promise<ApiResponse<T>> => {
