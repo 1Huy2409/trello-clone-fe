@@ -5,7 +5,7 @@ import { List } from "@/entities/list/ui/List";
 import { ListOptions } from "@/features/list/ui/ListOptions";
 import { CreateList } from "@/features/list/ui/CreateList";
 import type { List as ListType, Card as CardType } from "@/shared/lib/types";
-import { useListsByBoard } from "@/entities/list/api/use-lists";
+import { useListsByBoard, useReorderList } from "@/entities/list/api/use-lists";
 import { api } from "@/shared/api";
 import { cardKeys } from "@/entities/card/api/query-keys";
 
@@ -34,6 +34,7 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
     });
 
     const [boardLists, setBoardLists] = useState<ListWithCards[]>([]);
+    const { mutate: reorderList } = useReorderList();
 
     const combinedData = useMemo(() => {
         if (!lists) return [];
@@ -79,11 +80,13 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
             const beforeList = newLists[destination.index - 1];
             const afterList = newLists[destination.index + 1];
 
-            console.log("List Reorder Payload:", {
+            const payload = {
                 listId: removed.id,
                 beforeListId: beforeList ? beforeList.id : null,
                 afterListId: afterList ? afterList.id : null
-            });
+            };
+
+            reorderList(payload);
             return;
         }
 
