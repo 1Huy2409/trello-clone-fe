@@ -35,12 +35,6 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
 
     const [boardLists, setBoardLists] = useState<ListWithCards[]>([]);
 
-    // Combine lists and cards into local state
-    // We only update local state when queries change AND we are NOT dragging (to prevent stutter)
-    // Actually, for simplicity, we initial sync, and then maybe sync on valid changes?
-    // A simple useEffect watching the data might be enough if we don't worry too much about race conditions with optimistic UI yet.
-
-    // Combine lists and cards
     const combinedData = useMemo(() => {
         if (!lists) return [];
         return lists
@@ -55,8 +49,6 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
             .sort((a, b) => parseInt(a.position) - parseInt(b.position));
     }, [lists, cardQueries]);
 
-    // Sync state with server data
-    // Use JSON.stringify to prevent infinite loop due to object reference changes
     useEffect(() => {
         setBoardLists(combinedData);
     }, [JSON.stringify(combinedData)]);
@@ -179,8 +171,6 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
                             />
                         ))}
                         {provided.placeholder}
-
-                        {/* Add List Placeholder Button */}
                         <CreateList boardId={boardId} />
                     </div>
                 )}

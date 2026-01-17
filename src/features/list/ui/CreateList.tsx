@@ -32,8 +32,6 @@ export const CreateList = ({ boardId }: CreateListProps) => {
             disableEditing();
         }
     };
-
-    // Handle click outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (formRef.current && !formRef.current.contains(event.target as Node)) {
@@ -58,8 +56,6 @@ export const CreateList = ({ boardId }: CreateListProps) => {
         if (!title.trim()) return;
 
         createList({ boardId, data: { title } });
-        // disableEditing(); // Trello behavior: keep open?
-        // Let's keep it open for now as per previous logic intent, but clear title
         setTitle("");
         inputRef.current?.focus();
     };
