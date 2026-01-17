@@ -226,8 +226,9 @@ export const api = {
             const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.list.move, data, { withCredentials: true });
             return res.data;
         },
-        editListName: async <T = any>(data: UpdateList): Promise<ApiResponse<T>> => {
-            const res = await axiosInstance.patch<ApiResponse<T>>(API_ENDPOINT.list.editListName, data, { withCredentials: true });
+        editListName: async <T = any>(listId: string, data: UpdateList): Promise<ApiResponse<T>> => {
+            const url = API_ENDPOINT.list.editListName.replace(':listId', listId);
+            const res = await axiosInstance.patch<ApiResponse<T>>(url, data, { withCredentials: true });
             return res.data;
         },
         archiveList: async <T = any>(): Promise<ApiResponse<T>> => {

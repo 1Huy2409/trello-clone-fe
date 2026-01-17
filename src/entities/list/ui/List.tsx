@@ -5,6 +5,7 @@ import type { List as ListType, Card as CardType } from "@/shared/lib/types";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useCreateCard } from "@/entities/card/api/use-cards";
+import { useUpdateList } from "../api/use-lists";
 
 interface ListProps {
     list: ListType;
@@ -15,8 +16,48 @@ interface ListProps {
 
 export const List = ({ list, cards, index, headerAction }: ListProps) => {
     const [isEditing, setIsEditing] = useState(false);
+    const [isRenaming, setIsRenaming] = useState(false);
     const textareaRef = useRef<ElementRef<"textarea">>(null);
+    const inputRef = useRef<ElementRef<"input">>(null);
     const { mutate: createCard } = useCreateCard();
+    const { mutate: updateList } = useUpdateList();
+
+    const enableRenaming = () => {
+        setIsRenaming(true);
+        setTimeout(() => {
+            inputRef.current?.focus();
+            inputRef.current?.select();
+        });
+    };
+
+    const disableRenaming = () => {
+        setIsRenaming(false);
+    };
+
+    const handleSubmit = (e?: React.FormEvent) => {
+        e?.preventDefault();
+
+        const title = inputRef.current?.value;
+        if (!title || title === list.title) {
+            disableRenaming();
+            return;
+        }
+
+        updateList({
+            listId: list.id,
+            data: { title }
+        });
+        disableRenaming();
+    };
+
+    const onRenamingKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Escape") {
+            disableRenaming();
+        }
+        if (e.key === "Enter") {
+            handleSubmit();
+        }
+    };
 
     const enableEditing = () => {
         setIsEditing(true);
@@ -49,7 +90,22 @@ export const List = ({ list, cards, index, headerAction }: ListProps) => {
                         {...provided.dragHandleProps}
                         className="p-3 flex items-center justify-between font-medium text-sm"
                     >
-                        <div className="truncate px-1">{list.title}</div>
+                        {isRenaming ? (
+                            <input
+                                ref={inputRef}
+                                defaultValue={list.title}
+                                onBlur={() => handleSubmit()}
+                                onKeyDown={onRenamingKeyDown}
+                                className="text-sm px-[7px] py-1 h-7 font-medium border-transparent hover:border-input focus:border-input transition truncate bg-transparent focus:bg-background rounded-sm"
+                            />
+                        ) : (
+                            <div
+                                onClick={enableRenaming}
+                                className="truncate px-1 font-medium text-sm cursor-pointer hover:bg-gray-200/50 rounded-sm py-1"
+                            >
+                                {list.title}
+                            </div>
+                        )}
                         {typeof headerAction === "function"
                             ? headerAction({ onAddCard: enableEditing })
                             : headerAction}

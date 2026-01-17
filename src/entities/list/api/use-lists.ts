@@ -41,3 +41,15 @@ export const useCreateList = () => {
         },
     });
 };
+
+export const useUpdateList = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ listId, data }: { listId: string; data: import("@/shared/lib/types").UpdateList }) => {
+            return api.list.editListName(listId, data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: listKeys.all });
+        },
+    });
+};
