@@ -1,19 +1,32 @@
 import { useState } from "react";
+import { useCopyList } from "@/entities/list/api/use-lists";
 import { Button } from "@/shared/components/ui/button";
 import { ChevronLeft, X } from "lucide-react";
 
 interface CopyListProps {
+    listId: string;
+    boardId: string;
     listTitle: string;
     onBack: () => void;
     onClose: () => void;
 }
 
-export const CopyList = ({ listTitle, onBack, onClose }: CopyListProps) => {
+export const CopyList = ({ listId, boardId, listTitle, onBack, onClose }: CopyListProps) => {
     const [copyTitle, setCopyTitle] = useState(listTitle);
+    const { mutate: copyList, isPending } = useCopyList();
 
     const handleCopyList = () => {
-        alert(copyTitle);
-        onClose();
+        if (!copyTitle.trim()) return;
+
+        copyList({
+            listId,
+            targetBoardId: boardId,
+            title: copyTitle
+        }, {
+            onSuccess: () => {
+                onClose();
+            }
+        });
     };
 
     return (
@@ -48,7 +61,7 @@ export const CopyList = ({ listTitle, onBack, onClose }: CopyListProps) => {
                     onChange={(e) => setCopyTitle(e.target.value)}
                 />
             </div>
-            <Button className="w-full mt-2" onClick={handleCopyList}>
+            <Button className="w-full mt-2" onClick={handleCopyList} disabled={isPending}>
                 Create List
             </Button>
         </div>

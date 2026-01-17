@@ -90,7 +90,7 @@ export const ListOptions = ({ list, onAddCard }: ListOptionsProps) => {
             <PopoverContent className="w-72 px-2 py-2" align="start" side="bottom">
                 {view === "main" && <MainView />}
                 {view === "move" && <MoveList list={list} onBack={() => setView("main")} onClose={() => setOpen(false)} />}
-                {view === "copy" && <CopyList listTitle={list.title} onBack={() => setView("main")} onClose={() => setOpen(false)} />}
+                {view === "copy" && <CopyList listId={list.id} boardId={list.boardId} listTitle={list.title} onBack={() => setView("main")} onClose={() => setOpen(false)} />}
             </PopoverContent>
         </Popover>
     );

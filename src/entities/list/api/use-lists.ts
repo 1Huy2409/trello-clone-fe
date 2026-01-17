@@ -49,3 +49,16 @@ export const useReorderList = () => {
         },
     });
 };
+
+export const useCopyList = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (data: import("@/shared/lib/types").CopyList) => {
+            return api.list.copyList(data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: listKeys.all });
+        },
+    });
+};
+
