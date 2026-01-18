@@ -1,6 +1,6 @@
-import { api } from "@/shared/api";
-import type { UpdateProfileSchema } from "@/shared/lib/types";
+import { userApi } from "@/entities/user/api/user-api";
+import type { UpdateProfileSchema } from "@/entities/user/model/types";
 
 export async function updateProfileApi(data: UpdateProfileSchema) {
-    return await api.user.updateProfile(data)
+    return await userApi.updateProfile(data)
 }

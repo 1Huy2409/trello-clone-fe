@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { boardKeys } from "./query-keys";
-import { api } from "@/shared/api";
-import type { UpdateBoard, Board } from "@/shared/lib/types";
+import { boardApi } from "./board-api";
+import type { UpdateBoard, Board } from "../model/types";
 import { workspaceKeys } from "@/entities/workspace/api/query-keys";
 
 export const useBoardsByWorkspace = (workspaceId: string) => {
     return useQuery({
         queryKey: boardKeys.byWorkspace(workspaceId),
         queryFn: async () => {
-            const response = await api.board.getBoardsByWorkspaceId<Board[]>(workspaceId);
+            const response = await boardApi.getBoardsByWorkspaceId<Board[]>(workspaceId);
             return response.responseObject;
         },
         enabled: !!workspaceId,
@@ -19,7 +19,7 @@ export const useCreateBoard = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ workspaceId, data }: { workspaceId: string; data: { title: string; description?: string } }) => {
-            const response = await api.board.createBoardFromWorkspace(workspaceId, data);
+            const response = await boardApi.createBoardFromWorkspace(workspaceId, data);
             return response.responseObject;
         },
         onSuccess: (_, variables) => {
@@ -32,7 +32,7 @@ export const useBoardById = (boardId: string) => {
     return useQuery({
         queryKey: boardKeys.detail(boardId),
         queryFn: async () => {
-            const response = await api.board.getBoardById<Board>(boardId);
+            const response = await boardApi.getBoardById<Board>(boardId);
             return response.responseObject;
         },
         enabled: !!boardId,
@@ -43,7 +43,7 @@ export const useUpdateBoard = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, data }: { id: string; data: UpdateBoard }) => {
-            const response = await api.board.updateBoard(id, data);
+            const response = await boardApi.updateBoard(id, data);
             return response.responseObject;
         },
         onSuccess: (data) => {
@@ -57,7 +57,7 @@ export const useDeleteBoard = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (boardId: string) => {
-            const response = await api.board.deleteBoard(boardId);
+            const response = await boardApi.deleteBoard(boardId);
             return response.responseObject;
         },
         onSuccess: () => {
@@ -69,4 +69,5 @@ export const useDeleteBoard = () => {
         },
     });
 };
+
 

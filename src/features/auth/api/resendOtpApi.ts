@@ -1,6 +1,6 @@
-import { api } from "@/shared/api"
+import { authApi } from "./auth-api"
 
 export async function resendOTP(email: string) {
-    const response = await api.auth.resendOTP({ email })
+    const response = await authApi.resendOTP({ email })
     return response
 }

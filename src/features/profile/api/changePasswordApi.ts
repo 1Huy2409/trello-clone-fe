@@ -1,6 +1,6 @@
-import { api } from "@/shared/api";
-import type { ChangePasswordSchema } from "@/shared/lib/types";
+import { authApi } from "@/features/auth/api/auth-api";
+import type { ChangePasswordSchema } from "@/entities/user/model/types";
 
 export async function changePasswordApi(data: ChangePasswordSchema) {
-    return await api.auth.changePassword(data)
+    return await authApi.changePassword(data)
 }

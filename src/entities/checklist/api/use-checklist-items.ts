@@ -1,7 +1,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/shared/api";
-import type { CreateChecklistItem, UpdateItemContent, UpdateItemStatus } from "@/shared/types/checklist/type";
+import { checklistItemApi } from "./checklist-api";
+import type { CreateChecklistItem, UpdateItemContent, UpdateItemStatus, ChecklistItem } from "../model/types";
 
 export const checklistItemKeys = {
     all: ['checklistItems'] as const,
@@ -12,7 +12,7 @@ export const useChecklistItems = (checklistId: string) => {
     return useQuery({
         queryKey: checklistItemKeys.byChecklist(checklistId),
         queryFn: async () => {
-            const res = await api.checklistItem.getChecklistItems<import("@/shared/types/checklist/type").ChecklistItem[]>(checklistId);
+            const res = await checklistItemApi.getChecklistItems<ChecklistItem[]>(checklistId);
             return res.responseObject;
         },
         enabled: !!checklistId,
@@ -23,7 +23,7 @@ export const useCreateChecklistItem = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ checklistId, data }: { checklistId: string; data: CreateChecklistItem }) => {
-            return api.checklistItem.createChecklistItem(checklistId, data);
+            return checklistItemApi.createChecklistItem(checklistId, data);
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: checklistItemKeys.byChecklist(variables.checklistId) });
@@ -35,7 +35,7 @@ export const useUpdateChecklistItemStatus = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ itemId, data }: { itemId: string; data: UpdateItemStatus }) => {
-            return api.checklistItem.updateStatus(itemId, data);
+            return checklistItemApi.updateStatus(itemId, data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: checklistItemKeys.all });
@@ -47,7 +47,7 @@ export const useUpdateChecklistItemContent = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ itemId, data }: { itemId: string; data: UpdateItemContent }) => {
-            return api.checklistItem.updateContent(itemId, data);
+            return checklistItemApi.updateContent(itemId, data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: checklistItemKeys.all });
@@ -59,10 +59,11 @@ export const useDeleteChecklistItem = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (itemId: string) => {
-            return api.checklistItem.delete(itemId);
+            return checklistItemApi.delete(itemId);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: checklistItemKeys.all });
         },
     });
 };
+

@@ -1,7 +1,8 @@
 import { useState, useRef, type ElementRef } from "react";
 import { Droppable, Draggable } from "@hello-pangea/dnd";
 import { Card } from "@/entities/card/ui/Card";
-import type { List as ListType, Card as CardType } from "@/shared/lib/types";
+import type { List as ListType } from "@/entities/list";
+import type { Card as CardType } from "@/entities/card";
 import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useCreateCard } from "@/entities/card/api/use-cards";

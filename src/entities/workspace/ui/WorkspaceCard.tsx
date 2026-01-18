@@ -1,4 +1,4 @@
-import type { Workspace } from "@/shared/lib/types";
+import type { Workspace } from "@/entities/workspace";
 import { Kanban, Plus } from 'lucide-react';
 import { Link } from 'react-router';
 import { Button } from '@/shared/components/ui/button';

@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { useWorkspaceMembers, useRemoveWorkspaceMember } from "@/entities/workspace/api/use-workspaces";
-import type { WorkspaceMember } from "@/shared/types/workspace/type";
+import type { WorkspaceMember } from "@/entities/workspace";
 
 interface WorkspaceMembersProps {
     workspace: { id: string; title: string };

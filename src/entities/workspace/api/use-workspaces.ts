@@ -1,14 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { workspaceKeys } from "./query-keys";
 import { boardKeys } from "@/entities/board/api/query-keys";
-import { api } from "@/shared/api";
-import type { CreateWorkspace, UpdateWorkspace, AddWorkspaceMember, Workspace, WorkspaceRole, WorkspaceMember, PermissionDefinition, CreateWorkspaceRole, UpdateWorkspaceRole } from "@/shared/types/workspace/type";
+import { workspaceApi } from "./workspace-api";
+import { boardApi } from "@/entities/board/api/board-api";
+import { permissionApi } from "@/entities/permission/api/permission-api";
+import type {
+    CreateWorkspace, UpdateWorkspace, AddWorkspaceMember, Workspace,
+    WorkspaceRole, WorkspaceMember, PermissionDefinition, CreateWorkspaceRole, UpdateWorkspaceRole
+} from "../model/types";
 
 export const useWorkspaces = () => {
     return useQuery({
         queryKey: workspaceKeys.lists(),
         queryFn: async () => {
-            const response = await api.workspace.getWorkspaces<Workspace[]>();
+            const response = await workspaceApi.getWorkspaces<Workspace[]>();
             return response.responseObject;
         },
     });
@@ -18,7 +23,7 @@ export const useWorkspace = (id: string | undefined) => {
     return useQuery({
         queryKey: workspaceKeys.detail(id!),
         queryFn: async () => {
-            const response = await api.workspace.getWorkspaceById<Workspace>(id!);
+            const response = await workspaceApi.getWorkspaceById<Workspace>(id!);
             return response.responseObject;
         },
         enabled: !!id,
@@ -29,7 +34,7 @@ export const useWorkspaceBoards = (id: string | undefined) => {
     return useQuery({
         queryKey: boardKeys.byWorkspace(id!),
         queryFn: async () => {
-            const response = await api.board.getBoardsByWorkspaceId(id!);
+            const response = await boardApi.getBoardsByWorkspaceId(id!);
             return response.responseObject;
         },
         enabled: !!id,
@@ -40,7 +45,7 @@ export const useWorkspaceMembers = (workspaceId: string) => {
     return useQuery({
         queryKey: workspaceKeys.members(workspaceId),
         queryFn: async () => {
-            const response = await api.workspace.getWorkspaceMembers<WorkspaceMember[]>(workspaceId);
+            const response = await workspaceApi.getWorkspaceMembers<WorkspaceMember[]>(workspaceId);
             return response.responseObject;
         },
         enabled: !!workspaceId,
@@ -51,7 +56,7 @@ export const useCreateWorkspace = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (data: CreateWorkspace) => {
-            const response = await api.workspace.createWorkspace(data);
+            const response = await workspaceApi.createWorkspace(data);
             return response.responseObject;
         },
         onSuccess: () => {
@@ -64,7 +69,7 @@ export const useUpdateWorkspace = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, data }: { id: string; data: UpdateWorkspace }) => {
-            const response = await api.workspace.updateWorkspace(id, data);
+            const response = await workspaceApi.updateWorkspace(id, data);
             return response.responseObject;
         },
         onSuccess: (data) => {
@@ -78,7 +83,7 @@ export const useAddWorkspaceMember = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ id, data }: { id: string; data: AddWorkspaceMember }) => {
-            const response = await api.workspace.addWorkspaceMember(id, data);
+            const response = await workspaceApi.addWorkspaceMember(id, data);
             return response.responseObject;
         },
         onSuccess: (_, variables) => {
@@ -91,7 +96,7 @@ export const useRemoveWorkspaceMember = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ workspaceId, userId }: { workspaceId: string; userId: string }) => {
-            const response = await api.workspace.deleteWorkspaceMember(workspaceId, userId);
+            const response = await workspaceApi.deleteWorkspaceMember(workspaceId, userId);
             return response.responseObject;
         },
         onSuccess: (_, variables) => {
@@ -104,7 +109,7 @@ export const useWorkspaceRoles = (workspaceId: string) => {
     return useQuery({
         queryKey: workspaceKeys.roles(workspaceId),
         queryFn: async () => {
-            const response = await api.workspace.getWorkspaceRoles<WorkspaceRole[]>(workspaceId);
+            const response = await workspaceApi.getWorkspaceRoles<WorkspaceRole[]>(workspaceId);
             return response.responseObject;
         },
         enabled: !!workspaceId,
@@ -115,7 +120,7 @@ export const useAllPermissions = () => {
     return useQuery({
         queryKey: ['permissions'], // TODO: Add to query-keys if needed
         queryFn: async () => {
-            const response = await api.permission.getAllPermissions<PermissionDefinition[]>();
+            const response = await permissionApi.getAllPermissions<PermissionDefinition[]>();
             return response.responseObject;
         },
     });
@@ -125,7 +130,7 @@ export const useCreateWorkspaceRole = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ workspaceId, data }: { workspaceId: string; data: CreateWorkspaceRole }) => {
-            const response = await api.workspace.createWorkspaceRole(workspaceId, data);
+            const response = await workspaceApi.createWorkspaceRole(workspaceId, data);
             return response.responseObject;
         },
         onSuccess: (_, variables) => {
@@ -138,7 +143,7 @@ export const useUpdateWorkspaceRole = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ workspaceId, roleId, data }: { workspaceId: string; roleId: string; data: UpdateWorkspaceRole }) => {
-            const response = await api.workspace.updateWorkspaceRole(workspaceId, roleId, data);
+            const response = await workspaceApi.updateWorkspaceRole(workspaceId, roleId, data);
             return response.responseObject;
         },
         onSuccess: (_, variables) => {
@@ -151,7 +156,7 @@ export const useDeleteWorkspaceRole = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ workspaceId, roleId }: { workspaceId: string; roleId: string }) => {
-            const response = await api.workspace.deleteWorkspaceRole(workspaceId, roleId);
+            const response = await workspaceApi.deleteWorkspaceRole(workspaceId, roleId);
             return response.responseObject;
         },
         onSuccess: (_, variables) => {
@@ -164,7 +169,7 @@ export const useArchiveWorkspace = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id: string) => {
-            const response = await api.workspace.archiveWorkspace(id);
+            const response = await workspaceApi.archiveWorkspace(id);
             return response.responseObject;
         },
         onSuccess: () => {
@@ -178,7 +183,7 @@ export const useArchivedWorkspaces = () => {
     return useQuery({
         queryKey: ['archived-workspaces'], // TODO: Add to query-keys
         queryFn: async () => {
-            const response = await api.workspace.getArchivedWorkspaces<Workspace[]>();
+            const response = await workspaceApi.getArchivedWorkspaces<Workspace[]>();
             return response.responseObject;
         },
     });
@@ -188,7 +193,7 @@ export const useReopenWorkspace = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id: string) => {
-            const response = await api.workspace.reopenWorkspace(id);
+            const response = await workspaceApi.reopenWorkspace(id);
             return response.responseObject;
         },
         onSuccess: () => {
@@ -202,7 +207,7 @@ export const useDeleteWorkspace = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (id: string) => {
-            const response = await api.workspace.deleteWorkspace(id);
+            const response = await workspaceApi.deleteWorkspace(id);
             return response.responseObject;
         },
         onSuccess: () => {
@@ -210,3 +215,4 @@ export const useDeleteWorkspace = () => {
         },
     });
 };
+

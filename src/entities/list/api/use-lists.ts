@@ -1,13 +1,15 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { listKeys } from "./query-keys";
-import { api } from "@/shared/api";
-import type { List, CreateList } from "@/shared/lib/types";
+import { listApi } from "./list-api";
+import { boardApi } from "@/entities/board/api/board-api";
+import type { List, CreateList, UpdateList, ReorderList, CopyList, MoveList } from "../model/types";
 
 export const useListsByBoard = (boardId: string) => {
     return useQuery({
         queryKey: listKeys.byBoard(boardId),
         queryFn: async () => {
-            const response = await api.board.getBoardLists<List[]>(boardId);
+            // This API call is technically on the board controller usually, but returns Lists
+            const response = await boardApi.getBoardLists<List[]>(boardId);
             return response.responseObject;
         },
         enabled: !!boardId,
@@ -18,7 +20,7 @@ export const useCreateList = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async ({ boardId, data }: { boardId: string; data: CreateList }) => {
-            return api.list.createList(boardId, data);
+            return listApi.createList(boardId, data);
         },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: listKeys.byBoard(variables.boardId) });
@@ -29,8 +31,8 @@ export const useCreateList = () => {
 export const useUpdateList = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async ({ listId, data }: { listId: string; data: import("@/shared/lib/types").UpdateList }) => {
-            return api.list.editListName(listId, data);
+        mutationFn: async ({ listId, data }: { listId: string; data: UpdateList }) => {
+            return listApi.editListName(listId, data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: listKeys.all });
@@ -41,8 +43,8 @@ export const useUpdateList = () => {
 export const useReorderList = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (data: import("@/shared/lib/types").ReorderList) => {
-            return api.list.reorderList(data);
+        mutationFn: async (data: ReorderList) => {
+            return listApi.reorderList(data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: listKeys.all });
@@ -53,8 +55,8 @@ export const useReorderList = () => {
 export const useCopyList = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (data: import("@/shared/lib/types").CopyList) => {
-            return api.list.copyList(data);
+        mutationFn: async (data: CopyList) => {
+            return listApi.copyList(data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: listKeys.all });
@@ -65,8 +67,8 @@ export const useCopyList = () => {
 export const useMoveList = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: async (data: import("@/shared/lib/types").MoveList) => {
-            return api.list.moveList(data);
+        mutationFn: async (data: MoveList) => {
+            return listApi.moveList(data);
         },
         onSuccess: () => {
             // Invalidate all list queries to ensure both source and target boards are updated
@@ -75,13 +77,11 @@ export const useMoveList = () => {
     });
 };
 
-
-
 export const useArchiveList = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (listId: string) => {
-            return api.list.archiveList(listId);
+            return listApi.archiveList(listId);
         },
         onSuccess: () => {
             // Invalidate all list queries to ensure the archived list is removed from the board
@@ -94,7 +94,7 @@ export const useArchivedLists = (boardId: string) => {
     return useQuery({
         queryKey: [...listKeys.byBoard(boardId), 'archived'],
         queryFn: async () => {
-            const response = await api.list.getArchiveLists<List[]>(boardId);
+            const response = await listApi.getArchiveLists<List[]>(boardId);
             return response.responseObject;
         },
         enabled: !!boardId,
@@ -105,7 +105,7 @@ export const useReopenList = () => {
     const queryClient = useQueryClient();
     return useMutation({
         mutationFn: async (listId: string) => {
-            return api.list.reopenList(listId);
+            return listApi.reopenList(listId);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: listKeys.all });

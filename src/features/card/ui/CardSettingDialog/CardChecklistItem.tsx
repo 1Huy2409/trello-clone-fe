@@ -3,7 +3,7 @@ import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Button } from "@/shared/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import type { ChecklistItem as ChecklistItemType } from "@/shared/types/checklist/type";
+import type { ChecklistItem as ChecklistItemType } from "@/entities/checklist";
 import { useUpdateChecklistItemContent, useUpdateChecklistItemStatus, useDeleteChecklistItem } from "@/entities/checklist/api/use-checklist-items";
 import { toast } from "sonner";
 import { Input } from "@/shared/components/ui/input";

@@ -3,7 +3,8 @@ import { Plus } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useWorkspaces } from "@/entities/workspace/api/use-workspaces";
 import { useBoardsByWorkspace, useBoardById } from "@/entities/board/api/use-boards";
-import type { Workspace, Board } from "@/shared/lib/types";
+import type { Workspace } from "@/entities/workspace";
+import type { Board } from "@/entities/board";
 import { PageLoader } from "@/shared/components/ui/page-loader";
 
 // Entities

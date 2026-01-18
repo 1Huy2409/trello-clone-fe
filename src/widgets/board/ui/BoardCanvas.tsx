@@ -4,10 +4,11 @@ import { useQueries } from "@tanstack/react-query";
 import { List } from "@/entities/list/ui/List";
 import { ListOptions } from "@/features/list/ui/ListOptions";
 import { CreateList } from "@/features/list/ui/CreateList";
-import type { List as ListType, Card as CardType } from "@/shared/lib/types";
+import type { List as ListType } from "@/entities/list/model/types";
+import type { Card as CardType } from "@/entities/card/model/types";
 import { useListsByBoard, useReorderList } from "@/entities/list/api/use-lists";
 import { useReorderCard } from "@/entities/card/api/use-cards";
-import { api } from "@/shared/api";
+import { cardApi } from "@/entities/card/api/card-api";
 import { cardKeys } from "@/entities/card/api/query-keys";
 
 // Helper interface for local state
@@ -27,7 +28,7 @@ export function BoardCanvas({ boardId }: BoardCanvasProps) {
         queries: lists.map((list) => ({
             queryKey: cardKeys.byList(list.id),
             queryFn: async () => {
-                const res = await api.card.getCardByListId<CardType[]>(list.id);
+                const res = await cardApi.getCardByListId<CardType[]>(list.id);
                 return { listId: list.id, cards: res.responseObject };
             },
             enabled: !!list.id,

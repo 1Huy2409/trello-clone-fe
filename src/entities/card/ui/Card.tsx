@@ -5,7 +5,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/shared/components/ui/card";
-import type { Card as CardType } from "@/shared/lib/types";
+import type { Card as CardType } from "@/entities/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 
 interface CardProps {

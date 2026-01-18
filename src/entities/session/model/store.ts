@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { User } from "@/shared/types/user/type";
+import type { User } from "@/entities/user";
 
 import { queryClient } from "@/shared/api/query-client";
 

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { SortOption, ViewMode } from "./types";
 import { WorkspaceContext, WorkspaceDisplayContext } from "./context";
-import type { Board } from "@/shared/lib/types";
+import type { Board } from "@/entities/board";
 
 interface WorkspaceProviderProps {
     children: React.ReactNode;

@@ -8,7 +8,7 @@ import {
     SelectValue,
 } from "@/shared/components/ui/select";
 import { ChevronLeft, X } from "lucide-react";
-import type { List } from "@/shared/lib/types";
+import type { List } from "@/entities/list";
 import { useBoardById, useBoardsByWorkspace } from "@/entities/board/api/use-boards";
 import { useListsByBoard, useMoveList } from "@/entities/list/api/use-lists";
 

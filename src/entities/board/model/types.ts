@@ -48,6 +48,7 @@ export interface UpdateBoard {
 export interface AddBoardMember {
     userId: string;
     roleId: string;
+    // Keeping existing types
 }
 export interface UpdateBoardMember {
     roleId: string;

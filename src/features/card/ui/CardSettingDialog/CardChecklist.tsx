@@ -1,10 +1,10 @@
 
-import { CheckSquare, Trash2, Plus, X } from "lucide-react";
+import { CheckSquare, X } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Progress } from "@/shared/components/ui/progress";
 import { Input } from "@/shared/components/ui/input";
 import { useState } from "react";
-import type { Checklist } from "@/shared/types/checklist/type";
+import type { Checklist } from "@/entities/checklist";
 import { useChecklistItems, useCreateChecklistItem } from "@/entities/checklist/api/use-checklist-items";
 import { useDeleteChecklist, useUpdateChecklist } from "@/entities/checklist/api/use-checklists";
 import { CardChecklistItem } from "./CardChecklistItem";
