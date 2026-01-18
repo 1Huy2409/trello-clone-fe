@@ -8,6 +8,8 @@ import { CardActivity } from "./CardActivity";
 import { CardQuickActions } from "./CardQuickActions";
 import { CardMembers } from "./CardMembers";
 import { useArchiveCard, useUpdateCard } from "@/entities/card/api/use-cards";
+import { useChecklistsByCard } from "@/entities/checklist/api/use-checklists";
+import { CardChecklist } from "./CardChecklist";
 import type { Card } from "@/shared/lib/types";
 import { toast } from "sonner";
 
@@ -23,6 +25,7 @@ export const CardSettingDialog = ({ card, isOpen, onClose, listName }: CardSetti
 
     const { mutate: archiveCard } = useArchiveCard();
     const { mutate: updateCard } = useUpdateCard();
+    const { data: checklists = [] } = useChecklistsByCard(card.id);
 
     const handleArchive = () => {
         archiveCard(card.id, {
@@ -55,7 +58,7 @@ export const CardSettingDialog = ({ card, isOpen, onClose, listName }: CardSetti
                 </div>
 
                 {/* Quick Actions */}
-                <CardQuickActions />
+                <CardQuickActions cardId={card.id} />
 
                 {/* Title */}
                 <div className="mb-6">
@@ -75,6 +78,11 @@ export const CardSettingDialog = ({ card, isOpen, onClose, listName }: CardSetti
                         updateCard({ id: card.id, data: { description: newDesc } });
                     }}
                 />
+
+                {/* Checklists */}
+                {checklists.map((checklist) => (
+                    <CardChecklist key={checklist.id} checklist={checklist} />
+                ))}
 
                 {/* Members */}
                 <CardMembers />

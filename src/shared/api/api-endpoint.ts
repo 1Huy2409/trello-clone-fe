@@ -72,6 +72,19 @@ export const API_ENDPOINT = {
         copy: '/cards/copy',
         move: '/cards/move',
     },
+    checklist: {
+        createChecklist: '/cards/:id/checklists',
+        getChecklistsByCardId: '/cards/:id/checklists',
+        updateChecklist: '/checklists/:checklistId',
+        deleteChecklist: '/checklists/:checklistId',
+    },
+    checklistItem: {
+        createChecklistItem: '/checklists/:checklistId/items',
+        getChecklistItems: '/checklists/:checklistId/items',
+        updateStatus: '/checklist-items/:itemId/status',
+        updateContent: '/checklist-items/:itemId/content',
+        delete: '/checklist-items/:itemId',
+    },
     permission: {
         getAllPermissions: '/permissions',
     }
