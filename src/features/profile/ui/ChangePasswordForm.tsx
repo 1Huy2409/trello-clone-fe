@@ -8,7 +8,7 @@ import { Label } from "@/shared/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/components/ui/card"
 import { Alert, AlertDescription } from "@/shared/components/ui/alert"
 import { changePasswordApi } from "../api/changePasswordApi"
-import type { ChangePasswordSchema } from "@/shared/lib/types"
+import type { ChangePasswordSchema } from "@/entities/user"
 
 const changePasswordSchema = z.object({
     currentPassword: z.string().min(1, "Current password is required"),

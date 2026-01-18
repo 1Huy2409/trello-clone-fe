@@ -1,3 +1,11 @@
+export interface CardMember {
+    id: string;
+    userId: string;
+    fullname: string;
+    avatarUrl: string;
+    cardId: string;
+}
+
 export interface Card {
     id: string;
     title: string;
@@ -12,10 +20,10 @@ export interface Card {
 }
 export interface CreateCard {
     title: string;
-    description: string;
-    coverUrl: string;
-    priority: string;
-    dueDate: string;
+    description?: string;
+    coverUrl?: string;
+    priority?: string;
+    dueDate?: string;
 }
 export interface UpdateCard {
     title?: string;
@@ -41,13 +49,6 @@ export interface ReorderCard {
     afterCardId: string | null;
 }
 
-export interface CardMember {
-    id: string;
-    userId: string;
-    fullname: string;
-    avatarUrl: string;
-    cardId: string;
-}
 export interface AssignMember {
     userId: string;
 }

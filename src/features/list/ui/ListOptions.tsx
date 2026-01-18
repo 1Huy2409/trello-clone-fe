@@ -5,7 +5,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/shared/components/ui/popover";
-import type { List } from "@/shared/lib/types";
+import type { List } from "@/entities/list";
 import { MoreHorizontal, X } from "lucide-react";
 import { useState } from "react";
 import { CopyList } from "./CopyList";

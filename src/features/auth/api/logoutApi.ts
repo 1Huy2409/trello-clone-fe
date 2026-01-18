@@ -1,6 +1,6 @@
-import { api } from "@/shared/api";
+import { authApi } from "./auth-api";
 
 export async function logout() {
-    const data = await api.auth.logout()
+    const data = await authApi.logout()
     return data
 }

@@ -1,4 +1,4 @@
-import type { Board } from "@/shared/lib/types";
+import type { Board } from "@/entities/board";
 import { Link } from "react-router";
 import { Kanban, Users } from "lucide-react";
 import {
@@ -8,7 +8,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/shared/components/ui/card";
-import { useCommonStore } from "@/shared/stores/commonStore";
+// import { useCommonStore } from "@/shared/stores/commonStore";
 
 interface BoardCardProps {
     board: Board;
@@ -16,9 +16,9 @@ interface BoardCardProps {
 }
 
 export function BoardCard({ board, actions }: BoardCardProps) {
-    const { lists, boardMembers } = useCommonStore();
-    const boardLists = lists.filter((list) => list.boardId === board.id);
-    const membersEachBoard = boardMembers.filter((member) => member.boardId === board.id);
+    // const { lists, boardMembers } = useCommonStore();
+    const boardLists = []; // lists.filter((list) => list.boardId === board.id);
+    const membersEachBoard = []; // boardMembers.filter((member) => member.boardId === board.id);
 
     return (
         <Card className="cursor-pointer hover:shadow-md transition-shadow group relative">

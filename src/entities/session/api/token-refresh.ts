@@ -1,5 +1,5 @@
-import { api } from "@/shared/api";
+import { authApi } from "@/features/auth/api/auth-api";
 
 export const refreshAccessToken = async () => {
-    return api.auth.refreshToken()
+    return authApi.refreshToken()
 };

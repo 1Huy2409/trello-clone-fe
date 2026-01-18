@@ -1,4 +1,4 @@
-import type { Permission } from "../permission/type";
+import type { Permission } from "@/entities/permission/model/types";
 
 export const WorkspaceStatus = {
     ACTIVE: 'active',

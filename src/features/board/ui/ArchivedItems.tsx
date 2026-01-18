@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { ChevronLeft, X, RotateCcw } from "lucide-react";
 import { useArchivedLists, useReopenList, useListsByBoard } from "@/entities/list/api/use-lists";
-import { useArchivedCards, useReopenCard } from "@/entities/card/api/use-cards";
+import { useReopenCard } from "@/entities/card/api/use-cards";
 import { useQueries } from "@tanstack/react-query";
 import { cardKeys } from "@/entities/card/api/query-keys";
-import { api } from "@/shared/api";
-import type { Card } from "@/shared/lib/types";
+import { cardApi } from "@/entities/card/api/card-api";
+import type { Card } from "@/entities/card/model/types";
 import { toast } from "sonner";
 import { Input } from "@/shared/components/ui/input";
 
@@ -31,7 +31,7 @@ export const ArchivedItems = ({ boardId, onBack, onClose }: ArchivedItemsProps) 
         queries: lists.map(list => ({
             queryKey: [...cardKeys.byList(list.id), 'archived'],
             queryFn: async () => {
-                const response = await api.card.getArchiveCards<Card[]>(list.id);
+                const response = await cardApi.getArchiveCards<Card[]>(list.id);
                 return response.responseObject.map(c => ({ ...c, listName: list.title })); // attach list name for display
             },
             enabled: type === "cards", // only fetch when in cards view
@@ -52,7 +52,7 @@ export const ArchivedItems = ({ boardId, onBack, onClose }: ArchivedItemsProps) 
         });
     };
 
-    const displayItems = type === "lists" ? archivedLists : archivedCards;
+
 
 
     const handleReopenList = (id: string, name: string) => {

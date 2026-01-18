@@ -11,7 +11,7 @@ import {
     DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { useState, useEffect } from "react";
-import type { WorkspaceRole, PermissionDefinition } from "@/shared/types/workspace/type";
+import type { WorkspaceRole, PermissionDefinition } from "@/entities/workspace";
 
 interface RoleDialogProps {
     open: boolean;

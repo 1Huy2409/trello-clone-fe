@@ -2,7 +2,7 @@ import { useParams } from "react-router";
 import { useWorkspace, useWorkspaceBoards } from "@/entities/workspace/api/use-workspaces";
 import { WorkspaceProvider } from "@/features/workspace/shared/workspace-context";
 import { useState } from "react";
-import type { Board } from "@/shared/lib/types";
+import type { Board } from "@/entities/board";
 // Widgets & Features
 import { WorkspaceBoardList } from "@/widgets/workspace/ui/WorkspaceBoardList";
 import SearchInput from "@/features/workspace/ui/SearchInput";

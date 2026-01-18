@@ -10,7 +10,7 @@ import {
 } from '@/shared/components/ui/dialog';
 import { Input } from '@/shared/components/ui/input';
 import { Label } from '@/shared/components/ui/label';
-import type { Board } from '@/shared/lib/types';
+import type { Board } from '@/entities/board';
 import { useUpdateBoard } from "@/entities/board/api/use-boards";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";

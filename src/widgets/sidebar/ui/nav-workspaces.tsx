@@ -7,7 +7,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/shared/components/ui/sidebar';
-import type { Workspace } from '@/shared/lib/types';
+import type { Workspace } from '@/entities/workspace';
 import { KanbanSquare, MoreHorizontal, Settings, Users } from 'lucide-react';
 import {
     DropdownMenu,

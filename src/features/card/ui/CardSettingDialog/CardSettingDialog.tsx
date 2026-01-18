@@ -10,7 +10,7 @@ import { CardMembers } from "./CardMembers";
 import { useArchiveCard, useUpdateCard } from "@/entities/card/api/use-cards";
 import { useChecklistsByCard } from "@/entities/checklist/api/use-checklists";
 import { CardChecklist } from "./CardChecklist";
-import type { Card } from "@/shared/lib/types";
+import type { Card } from "@/entities/card";
 import { toast } from "sonner";
 
 interface CardSettingDialogProps {

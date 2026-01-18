@@ -1,7 +1,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Separator } from "@/shared/components/ui/separator";
-import type { Workspace, WorkspaceRole } from "@/shared/lib/types";
+import type { Workspace, WorkspaceRole } from "@/entities/workspace";
 
 import { AlertTriangle, Plus, Save, Shield, MoreHorizontal, Pencil, Trash, Archive, Loader2 } from "lucide-react";
 import { useState } from "react";

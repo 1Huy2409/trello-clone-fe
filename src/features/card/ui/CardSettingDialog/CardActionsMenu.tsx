@@ -1,15 +1,13 @@
 import { Button } from "@/shared/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/components/ui/popover";
 import {
-    MoreHorizontal,
     ArrowRight,
     Copy,
     Archive,
     Share2,
     Eye,
     LayoutTemplate,
-    UserPlus,
-    X
+    UserPlus
 } from "lucide-react";
 
 interface CardActionsMenuProps {
