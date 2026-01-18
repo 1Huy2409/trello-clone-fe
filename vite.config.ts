@@ -10,5 +10,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  base: '/my-trello/'
+  base: '/my-trello/',
+  server: {
+    host: true,
+    port: 5173,
+    watch: {
+      usePolling: true
+    }
+  }
 })
